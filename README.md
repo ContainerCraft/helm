@@ -10,7 +10,7 @@ kubectl create namespace konductor
 
 2. Add helm repo
 ```sh
-helm repo add ccio https://containercraft.io/charts/charts && helm repo update
+helm repo add ccio https://containercraft.io/helm/charts && helm repo update
 ```
 
 3. Deploy Konductor chart
