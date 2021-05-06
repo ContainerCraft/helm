@@ -27,4 +27,4 @@ kubectl get -n konductor svc
 kubectl get -n konductor ingress
 ```
 
-### 1. Access the Konductor container via SSH in terminal or VSCode in the browser
+### 1. Access the Konductor container via SSH or VSCode in browser
