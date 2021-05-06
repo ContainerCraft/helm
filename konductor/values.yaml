@@ -4,6 +4,9 @@ image:
   pullPolicy: IfNotPresent
   tag: "code"
 
+storage:
+  class: openebs-hostpath
+
 nameOverride: ""
 fullnameOverride: "konductor"
 imagePullSecrets: []

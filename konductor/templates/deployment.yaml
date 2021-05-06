@@ -30,12 +30,24 @@ spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       hostname: {{ include "konductor.fullname" .  }}
+      volumes:
+      - name: dot-local
+        persistentVolumeClaim:
+          claimName: konductor-pvc-local
+      - name: home-platform
+        persistentVolumeClaim:
+          claimName: konductor-pvc-platform
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          volumeMounts:
+          - name: home-platform
+            mountPath: /root/platform
+          - name: dot-local
+            mountPath: /root/.local
           ports:
             - name: ssh
               containerPort: 2222
