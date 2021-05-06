@@ -2,6 +2,7 @@
 ![screenshot1](./pages/vscode-server.png)
 
 ## Quickstart
+    
 1. Create Namespace
 ```sh
 kubectl create namespace konductor
