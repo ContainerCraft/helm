@@ -1,0 +1,14 @@
+---
+apiVersion: configuration.konghq.com/v1beta1
+kind: TCPIngress
+metadata:
+  name: konductor-ssh
+  namespace: konductor
+  annotations:
+    kubernetes.io/ingress.class: kong
+spec:
+  rules:
+  - port: 2222
+    backend:
+      serviceName: konductor
+      servicePort: 2222
