@@ -1,45 +1,29 @@
 # Konductor Helm Chart
 
-### .1
-```sh
-git clone https://github.com/containercraft/konductor.git && cd konductor
-```
-
-### .1
+### 1. Create Namespace
 ```sh
 kubectl create namespace konductor
 ```
 
-### .1
+### 1. Add helm repo
 ```sh
-helm install konductor . --namespace konductor
+helm repo add ccio https://containercraft.io/charts/charts && helm repo update
 ```
 
-### .1
+### 1. Deploy Konductor chart
 ```sh
+helm install konductor --namespace konductor ccio/konductor 
 ```
 
-### .1
+### 1. Exec into Konductor
 ```sh
+kubectl exec -n konductor -it $(kubectl get po -n konductor -ojsonpath='{.items[*].metadata.name}') -- connect
 ```
 
-### .1
+### 1. Review and setup Ingress 
 ```sh
+kubectl get -n konductor svc
+kubectl get -n konductor ingress
 ```
 
-### .1
-```sh
-```
-
-### .1
-```sh
-```
-
-### .1
-```sh
-```
-
-### .1
-```sh
-```
-
+### 1. Access the Konductor container via SSH in terminal or VSCode in the browser
