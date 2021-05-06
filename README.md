@@ -1,4 +1,5 @@
 # Konductor Helm Chart
+![screenshot1](./pages/vscode-server.png)
 
 ### 1. Create Namespace
 ```sh
