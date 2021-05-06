@@ -1,0 +1,14 @@
+apiVersion: v1
+entries:
+  konductor:
+  - apiVersion: v2
+    appVersion: 0.0.1
+    created: "2021-05-06T09:59:24.139354528-07:00"
+    description: Containerized Developer & Ops Bastion
+    digest: cf0c84b31fe78506edc4e8e1e83eba1f6320a012d7b339f49c8e73843bc61be9
+    name: konductor
+    type: application
+    urls:
+    - https://containercraft.io/charts/charts/konductor-0.0.1.tgz
+    version: 0.0.1
+generated: "2021-05-06T09:59:24.138898656-07:00"
