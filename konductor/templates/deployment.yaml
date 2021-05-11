@@ -37,6 +37,12 @@ spec:
       - name: home-platform
         persistentVolumeClaim:
           claimName: konductor-pvc-platform
+      - name: dot-ssh
+        persistentVolumeClaim:
+          claimName: konductor-pvc-ssh
+      - name: dot-gitconfig
+        persistentVolumeClaim:
+          claimName: konductor-pvc-gitconfig
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
