@@ -48,6 +48,10 @@ spec:
             mountPath: /root/platform
           - name: dot-local
             mountPath: /root/.local
+          - name: dot-ssh
+            mountPath: /root/.ssh
+          - name: dot-gitconfig
+            mountPath: /root/.gitconfig
           ports:
             - name: ssh
               containerPort: 2222
