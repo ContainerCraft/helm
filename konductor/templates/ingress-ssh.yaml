@@ -8,7 +8,7 @@ apiVersion: extensions/v1beta1
 {{- end }}
 kind: Ingress
 metadata:
-  name: {{ $fullName }}-code
+  name: {{ $fullName }}-ssh
   labels:
     {{- include "konductor.labels" . | nindent 4 }}
   {{- with .Values.ingress.ssh.annotations }}
