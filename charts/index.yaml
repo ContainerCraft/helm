@@ -3,7 +3,17 @@ entries:
   konductor:
   - apiVersion: v2
     appVersion: 0.0.1
-    created: "2021-05-06T14:04:09.339834532-07:00"
+    created: "2021-05-11T15:44:08.949747876-07:00"
+    description: Containerized Developer & Ops Bastion
+    digest: 5acd3c5f543162773708cdb3ffe6a25e046f8fa705fc73ef3214bd8d9418aac6
+    name: konductor
+    type: application
+    urls:
+    - https://containercraft.io/helm/charts/konductor-0.0.2.tgz
+    version: 0.0.2
+  - apiVersion: v2
+    appVersion: 0.0.1
+    created: "2021-05-11T15:44:08.949229643-07:00"
     description: Containerized Developer & Ops Bastion
     digest: f00a7e18ad2c8d0d6712d1edfe49ac8f5d1b6cc2d52f0d838ba9394dbfbb159f
     name: konductor
@@ -11,4 +21,4 @@ entries:
     urls:
     - https://containercraft.io/helm/charts/konductor-0.0.1.tgz
     version: 0.0.1
-generated: "2021-05-06T14:04:09.339455663-07:00"
+generated: "2021-05-11T15:44:08.948624482-07:00"
