@@ -2,6 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: {{ include "konductor.fullname" . }}-ssh
+  namespace: konductor
   labels:
     {{- include "konductor.labels" . | nindent 4 }}
 spec:
