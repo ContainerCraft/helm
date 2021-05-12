@@ -6,9 +6,12 @@ metadata:
   namespace: konductor
   annotations:
     kubernetes.io/ingress.class: kong
+  labels:
+    app.kubernetes.io/instance: konductor
+    app.kubernetes.io/name: konductor
 spec:
   rules:
   - port: 2222
     backend:
-      serviceName: konductor
+      serviceName: konductor-ssh
       servicePort: 2222
