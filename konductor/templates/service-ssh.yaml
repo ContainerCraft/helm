@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "konductor.fullname" . }}-ssh
+  labels:
+    {{- include "konductor.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: 2222
+      targetPort: 2222
+      protocol: TCP
+      name: ssh
+  selector:
+    {{- include "konductor.selectorLabels" . | nindent 4 }}
