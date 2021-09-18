@@ -1,0 +1,67 @@
+---
+apiVersion: nmstate.io/v1beta1
+kind: NodeNetworkConfigurationPolicy
+metadata:
+  name: vlan100
+spec:
+# nodeSelector:
+#   kubernetes.io/hostname: node01
+#   node-role.kubernetes.io/worker: ""
+  desiredState:
+    interfaces:
+    - name: enp2s0vlan100
+      description: Linux bridge with enp2s0.100 as a port
+      type: linux-bridge
+      state: up
+      ipv4:
+        dhcp: false
+        enabled: false
+      bridge:
+        options:
+          stp:
+            enabled: false
+        port:
+        - name: enp2s0.100
+    - name: enp2s0.100
+      description: Physical enp2s0 network vlan id 100
+      type: vlan
+      state: up
+      ipv4:
+        dhcp: false
+        enabled: false
+      vlan:
+        base-iface: enp2s0
+        id: 100
+#       mode: trunk
+#       trunk-tags:
+#         - id: 101
+#         - id-range:
+#             max: 500
+#             min: 200
+#       tag: 100
+#       enable-native: true
+---
+apiVersion: k8s.cni.cncf.io/v1
+kind: NetworkAttachmentDefinition
+metadata:
+  name: kargo-net-attach-def-enp2s0-vlan100
+  namespace: kargo
+  labels:
+    containercraft.io/project: kargo
+spec:
+  config: |
+    {
+
+        "cniVersion": "0.3.1",
+        "name": "enp2s0vlan100",
+        "plugins": [
+            {
+                "type": "bridge",
+                "bridge": "enp2s0vlan100",
+                "ipam": {}
+            },
+            {
+                "type": "tuning"
+            }
+        ]
+    }
