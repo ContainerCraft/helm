@@ -3,8 +3,8 @@ name: Release Charts
 on:
   push:
     tags: 'chart.*'
-#   branches:
-#     - main
+    branches:
+      - releases
 
 jobs:
   release:
