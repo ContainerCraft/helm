@@ -35,3 +35,6 @@ virtctl console -nkargo bastion-user1-kargo-vpc
 kubectl get vmi -nkargo -owide
 ```
 ![vmi list](../pages/kargo-vpc-get-vmi.png)
+```sh
+ssh ubuntu@192.168.1.158
+```
