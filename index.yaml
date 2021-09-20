@@ -3,6 +3,16 @@ entries:
   kargo-vpc:
   - apiVersion: v2
     appVersion: 0.0.2
+    created: "2021-09-20T16:07:54.777240426Z"
+    description: CCIO Kargo VPC Chart
+    digest: dcb5d8edc0a6dbd2f4569ef5190ece92358cb141fa62ad3a37efa18812bda1c6
+    name: kargo-vpc
+    type: application
+    urls:
+    - https://github.com/ContainerCraft/helm/releases/download/kargo-vpc-0.0.4/kargo-vpc-0.0.4.tgz
+    version: 0.0.4
+  - apiVersion: v2
+    appVersion: 0.0.2
     created: "2021-09-20T05:00:43.206679318Z"
     description: CCIO Kargo VPC Chart
     digest: f63decdd40783a47de99390cf0603a07f67aa6b8d27d2d1f4e0a071f7c3d4e9d
@@ -52,4 +62,4 @@ entries:
     urls:
     - https://containercraft.io/helm/charts/konductor-0.0.1.tgz
     version: 0.0.1
-generated: "2021-09-20T05:00:43.206695919Z"
+generated: "2021-09-20T16:07:54.777255626Z"
