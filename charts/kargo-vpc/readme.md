@@ -1,5 +1,18 @@
-# Kargo Kubevirt VPC
-  - (optional) upload ssh key
+# CCIO Kargo Kubevirt VPC Helm Chart
+Features:
+  - Ubuntu Bastion    
+    - SSH    
+    - RDP    
+  - VyOS Firewall & Gateway
+  - Private NAT Network (vlan)
+
+### How To:
+  - Add CCIO Helm Chart Repo
+```sh
+helm repo add ccio https://containercraft.io/helm/
+helm repo update
+```
+  - (optional) upload ssh key to secret
 ```sh
 kubectl create secret generic user1-kargo-sshpubkey \
     --from-file=sshpubkey=$HOME/.ssh/id_rsa.pub \
@@ -15,4 +28,7 @@ helm install user1-kargo-vpc . --namespace kargo --values ./values.yaml
 virtctl console -nkargo vyos-gateway-user1-kargo-vpc 
 virtctl console -nkargo bastion-user1-kargo-vpc 
 ```
-  - you can now ssh & rdp to bastion through gateway's public IP    
+  - you can now ssh & rdp to bastion through gateway's public IP
+```sh
+kubectl get vmi -nkargo -owide
+```
