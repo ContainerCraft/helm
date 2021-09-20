@@ -1,42 +1,44 @@
----
 apiVersion: kubevirt.io/v1alpha3
 kind: VirtualMachine
 metadata:
-  name: vyos-green-dmz0-gateway-ephemeral
+  name: vyos-gateway
   namespace: kargo
   labels:
+    app: vyos
     kubevirt.io/os: linux
-    vyos: gateway-vlan0-to-vlan100
-    qubo.containercraft.io/library: "vyos"
+    vyos.io/release: "1.4-rolling"
+    containercraft.io/project: "qubo/library/kargo-vpc"
 spec:
   running: true
-#  dataVolumeTemplates:
-#  - metadata:
-#      name: vyos-green-dmz0-volume-vda-root
-#     #annotations:
-#     #  kubevirt.io/provisionOnNode: "qotom"
-#    spec:
-#      config:
-#        featureGates:
-#        - HonorWaitForFirstConsumer
-#      nodeSelector:
-#        node-role.kubernetes.io/kubevirt: ""
-#      pvc:
-#        accessModes:
-#        - ReadWriteMany
-#        resources:
-#          requests:
-#            storage: 8G
-#        storageClassName: ceph-filesystem
-#      source:
-#        registry:
-#          url: "docker://quay.io/containercraft/vyos:1.4-rolling"
-#          imagePullPolicy: Always
+  dataVolumeTemplates:
+  - metadata:
+      name: vyos-volume-vda-root
+      annotations:
+        kubevirt.io/provisionOnNode: "node1"
+    spec:
+      config:
+        featureGates:
+        - HonorWaitForFirstConsumer
+      nodeSelector:
+        node-role.kubernetes.io/kubevirt: ""
+      pvc:
+        accessModes:
+        - ReadWriteMany
+        resources:
+          requests:
+            storage: 8G
+        storageClassName: ceph-filesystem
+      source:
+        registry:
+          url: "docker://quay.io/containercraft/vyos:1.4-rolling"
+          imagePullPolicy: Always
   template:
     metadata:
       labels:
-        kubevirt.io/domain: "kargo"
-        qubo.containercraft.io/library: "vyos"
+        app: vyos
+        kubevirt.io/os: linux
+        vyos.io/release: "1.4-rolling"
+        containercraft.io/project: "qubo/library/kargo-vpc"
     spec:
       nodeSelector:
         node-role.kubernetes.io/kubevirt: ""
@@ -60,7 +62,7 @@ spec:
           networkInterfaceMultiqueue: true
           rng: {}
           disks:
-          - name: vyos-green-dmz0-disk-vda-root
+          - name: vyos-disk-vda-root
             disk:
               bus: virtio
           - name: cloudinitdisk
@@ -80,13 +82,12 @@ spec:
           networkName: kargo-net-attach-def-br0
       - name: eth1
         multus:
-          networkName: kargo-net-attach-def-enp2s0-vlan100
+          networkName: kargo-net-attach-def-br0-vlan100
       volumes:
-      - name: vyos-green-dmz0-disk-vda-root
-        containerDisk:
-          image: quay.io/containercraft/vyos:1.4-rolling
-          imagePullPolicy: IfNotPresent
+      - name: vyos-disk-vda-root
+        dataVolume:
+          name: vyos-volume-vda-root
       - name: cloudinitdisk
         cloudInitNoCloud:
           secretRef:
-            name: vyos-dmz-cloudconfig
+            name: vyos-cloudconfig

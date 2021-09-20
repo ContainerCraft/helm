@@ -1,0 +1,30 @@
+apiVersion: nmstate.io/v1beta1
+kind: NodeNetworkConfigurationPolicy
+metadata:
+  name: {{ include "kargo-vpc.fullname" . }}.brvpc.{{ .Values.network.host_interface }}.{{ .Values.network.vlan_id }}
+spec:
+  desiredState:
+    interfaces:
+    - name: {{ .Values.network.host_interface }}.{{ .Values.network.vlan_id }}
+      description: Interface {{ .Values.network.host_interface }} network vlan id {{ .Values.network.vlan_id }}
+      type: vlan
+      state: up
+      ipv4:
+        dhcp: false
+        enabled: false
+      vlan:
+        base-iface: {{ .Values.network.host_interface }}
+        id: {{ .Values.network.vlan_id }}
+    - name: brvpc{{ .Values.network.host_interface }}.{{ .Values.network.vlan_id }}
+      description: Linux bridge on port {{ .Values.network.host_interface }} vlan {{ .Values.network.vlan_id }}
+      type: linux-bridge
+      state: up
+      ipv4:
+        dhcp: false
+        enabled: false
+      bridge:
+        options:
+          stp:
+            enabled: false
+        port:
+        - name: {{ .Values.network.host_interface }}.{{ .Values.network.vlan_id }}

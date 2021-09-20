@@ -1,0 +1,24 @@
+apiVersion: k8s.cni.cncf.io/v1
+kind: NetworkAttachmentDefinition
+metadata:
+  name: '{{ include "kargo-vpc.fullname" . }}.brvpc{{ .Values.network.host_interface }}.{{ .Values.network.vlan_id }}'
+  labels:
+    qubo.containercraft.io/project: "kargo-vpc"
+    containercraft.io/project: qubo
+    vpc: {{ include "kargo-vpc.fullname" . }}
+spec:
+  config: |
+      {
+          "cniVersion": "0.3.1",
+          "name": "brvpc{{ .Values.network.host_interface }}.{{ .Values.network.vlan_id }}",
+          "plugins": [
+              {
+                  "type": "bridge",
+                  "bridge": "brvpc{{ .Values.network.host_interface }}.{{ .Values.network.vlan_id }}",
+                  "ipam": {}
+              },
+              {
+                  "type": "tuning"
+              }
+          ]
+      }

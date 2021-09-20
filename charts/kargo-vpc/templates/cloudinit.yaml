@@ -1,0 +1,13 @@
+{{- $sshPubKey := "kargo-vpc.sshpubkey" -}}
+{{- $secret := (lookup "v1" "Secret" .Release.Namespace "user1-kargo-sshpubkey") }}
+{{- if $secret }}
+{{- $sshPubKey = index $secret.data "sshpubkey" }}
+{{- end -}}
+apiVersion: v1
+data:
+  userdata: {{ (tpl (.Files.Get "userdata") .) | b64enc }}
+kind: Secret
+metadata:
+  creationTimestamp: null
+  name: vyos-cloudconfig
+  namespace: kargo

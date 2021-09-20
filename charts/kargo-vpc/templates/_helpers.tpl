@@ -1,4 +1,11 @@
 {{/*
+Lookup SSH Public Key
+*/}}
+{{- define "kargo-vpc.sshpubkey" -}}
+{{- default .Values.vyos.credentials.sshpubkey | replace "ssh-rsa" "" -}}
+{{- end }}
+
+{{/*
 Expand the name of the chart.
 */}}
 {{- define "kargo-vpc.name" -}}

@@ -1,0 +1,30 @@
+12a13,34
+>   dataVolumeTemplates:
+>   - metadata:
+>       name: vyos-volume-vda-root
+>       annotations:
+>         kubevirt.io/provisionOnNode: "node1"
+>     spec:
+>       config:
+>         featureGates:
+>         - HonorWaitForFirstConsumer
+>       nodeSelector:
+>         node-role.kubernetes.io/kubevirt: ""
+>       pvc:
+>         accessModes:
+>         - ReadWriteMany
+>         resources:
+>           requests:
+>             storage: 8G
+>         storageClassName: ceph-filesystem
+>       source:
+>         registry:
+>           url: "docker://quay.io/containercraft/vyos:1.4-rolling"
+>           imagePullPolicy: Always
+66,68c88,89
+<         containerDisk:
+<           image: quay.io/containercraft/vyos:1.4-rolling
+<           imagePullPolicy: Always
+---
+>         dataVolume:
+>           name: vyos-volume-vda-root

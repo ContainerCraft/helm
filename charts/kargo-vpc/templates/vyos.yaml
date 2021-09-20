@@ -1,0 +1,76 @@
+apiVersion: kubevirt.io/v1alpha3
+kind: VirtualMachine
+metadata:
+  name: vyos-gateway-{{ include "kargo-vpc.fullname" . }}
+  labels:
+    app: vyos
+    kubevirt.io/os: linux
+    vyos.io/release: "1.4-rolling"
+    vpc: {{ include "kargo-vpc.fullname" . }}
+    qubo.containercraft.io/project: "kargo-vpc"
+    userdata/sum: {{ include (print $.Template.BasePath "/cloudinit.yaml") . | sha256sum | trunc 63 }}
+    {{- include "kargo-vpc.labels" . | nindent 4 }}
+spec:
+  running: true
+  template:
+    metadata:
+      labels:
+        app: vyos
+        kubevirt.io/os: linux
+        vyos.io/release: "1.4-rolling"
+        vpc: {{ include "kargo-vpc.fullname" . }}
+        qubo.containercraft.io/project: "kargo-vpc"
+        userdata/sum: {{ include (print $.Template.BasePath "/cloudinit.yaml") . | sha256sum | trunc 63 }}
+        {{- include "kargo-vpc.labels" . | nindent 8 }}
+    spec:
+      nodeSelector:
+        node-role.kubernetes.io/kubevirt: ""
+      terminationGracePeriodSeconds: 0
+      domain:
+        cpu:
+          cores: {{ .Values.vyos.cpu.cores }}
+          model: {{ .Values.vyos.cpu.model }}
+          dedicatedCpuPlacement: false
+          threads: 1
+          sockets: 1
+        machine:
+          type: "pc-q35-rhel8.3.0"
+        resources:
+          {{- toYaml .Values.vyos.resources | nindent 10 }}
+        devices:
+          autoattachPodInterface: false
+          autoattachSerialConsole: true
+          autoattachGraphicsDevice: false
+          networkInterfaceMultiqueue: true
+          rng: {}
+          disks:
+          - name: vyos-disk-vda-root
+            disk:
+              bus: virtio
+          - name: cloudinitdisk
+            cdrom:
+              bus: sata
+              readonly: true
+          interfaces:
+          - name: eth0
+            model: virtio
+            bridge: {}
+          - name: eth1
+            model: virtio
+            bridge: {}
+      networks:
+      - name: eth0
+        multus:
+          networkName: {{ .Values.network.primary }}
+      - name: eth1
+        multus:
+          networkName: {{ include "kargo-vpc.fullname" . }}.brvpc{{ .Values.network.host_interface }}.{{ .Values.network.vlan_id }}
+      volumes:
+      - name: vyos-disk-vda-root
+        containerDisk:
+          image: "{{ .Values.vyos.image.repository }}:{{ .Values.vyos.image.tag }}"
+          imagePullPolicy: {{ .Values.vyos.image.pullPolicy }}
+      - name: cloudinitdisk
+        cloudInitNoCloud:
+          secretRef:
+            name: vyos-cloudconfig
