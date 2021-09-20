@@ -1,10 +1,12 @@
 # CCIO Kargo Kubevirt VPC Helm Chart
 Features:
+  - Private NAT Network (vlan)
+  - VyOS Firewall & Gateway
   - Ubuntu Bastion    
     - SSH    
     - RDP    
-  - VyOS Firewall & Gateway
-  - Private NAT Network (vlan)
+
+![RDP](../pages/kargo-vpc-UbuntuRDP.png)
 
 ### How To:
   - Add CCIO Helm Chart Repo
@@ -32,3 +34,4 @@ virtctl console -nkargo bastion-user1-kargo-vpc
 ```sh
 kubectl get vmi -nkargo -owide
 ```
+![vmi list](../pages/kargo-vpc-get-vmi.png)

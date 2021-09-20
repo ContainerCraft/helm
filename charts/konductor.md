@@ -1,5 +1,5 @@
 # Konductor Helm Chart
-![screenshot1](../pages/vscode-server.png)
+![screenshot1](../pages/konductor-vscode-server.png)
 
 ## Quickstart
     
