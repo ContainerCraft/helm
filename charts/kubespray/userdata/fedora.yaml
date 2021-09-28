@@ -1,0 +1,17 @@
+#cloud-config
+disable_root: true
+ssh_pwauth: true
+chpasswd:
+  expire: False
+  list: |
+     {{ .Values.user.name }}:{{ .Values.user.credentials.pass }}
+users:
+  - name: {{ .Values.user.name }}
+    sudo: ['ALL=(ALL) NOPASSWD:ALL']
+    groups: wheel
+    shell: /bin/bash
+    lock_passwd: false
+    ssh-authorized-keys:
+      - {{ .Values.user.credentials.sshpubkey }}
+runcmd:
+  - "echo 'ZmFzdGVzdG1pcnJvcj0xCg==' | base64 -d | tee -a /etc/dnf/dnf.conf"

@@ -1,0 +1,162 @@
+---
+apiVersion: kubevirt.io/v1alpha3
+kind: VirtualMachine
+metadata:
+  name: node3
+  labels:
+    app: kubespray
+    cluster: kubespray
+    kubevirt.io/os: linux
+spec:
+  running: true
+  dataVolumeTemplates:
+  - metadata:
+      name: node3-pvc-vdb
+      annotations:
+        kubevirt.io/provisionOnNode: node4
+      labels:
+        app: kubespray
+    spec:
+      source:
+        blank: {}
+      accessModes:
+      - ReadWriteOnce
+      capacity:
+        storage: 64G
+      config:
+        featureGates:
+        - HonorWaitForFirstConsumer
+      pvc:
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 64G
+        storageClassName: hostpath-provisioner
+      persistentVolumeReclaimPolicy: Delete
+      storageClassName: hostpath-provisioner
+      volumeMode: Block
+  - metadata:
+      name: node3-pvc-vdc
+      annotations:
+        kubevirt.io/provisionOnNode: node4
+      labels:
+        app: kubespray
+    spec:
+      source:
+        blank: {}
+      accessModes:
+      - ReadWriteOnce
+      capacity:
+        storage: 64G
+      config:
+        featureGates:
+        - HonorWaitForFirstConsumer
+      pvc:
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 64G
+        storageClassName: hostpath-provisioner
+      persistentVolumeReclaimPolicy: Delete
+      storageClassName: hostpath-provisioner
+      volumeMode: Block
+  - metadata:
+      name: node3-pvc-vda
+      annotations:
+        kubevirt.io/provisionOnNode: node4
+      labels:
+        app: kubespray
+    spec:
+      source:
+        registry:
+          url: "docker://quay.io/containercraft/fedora:34"
+          imagePullPolicy: IfNotPresent
+      accessModes:
+      - ReadWriteOnce
+      capacity:
+        storage: 64G
+      config:
+        featureGates:
+        - HonorWaitForFirstConsumer
+      pvc:
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 64G
+        storageClassName: hostpath-provisioner
+      persistentVolumeReclaimPolicy: Delete
+      storageClassName: hostpath-provisioner
+      volumeMode: Block
+  template:
+    spec:
+      evictionStrategy: LiveMigrate
+      nodeSelector:
+        kargo-zone.containercraft.io/d: ""
+      domain:
+        clock:
+          timer: {}
+          utc: {}
+        cpu:
+          cores: 4
+          threads: 2
+          sockets: 2
+          model: host-passthrough
+          dedicatedCpuPlacement: false
+        resources:
+          requests:
+            memory: 16G
+            devices.kubevirt.io/kvm: "1"
+          limits:
+            memory: 16G
+        machine:
+          type: pc-q35-rhel8.3.0
+        devices:
+          autoattachPodInterface: false
+          autoattachSerialConsole: true
+          autoattachGraphicsDevice: true
+          networkInterfaceMultiqueue: true
+          rng: {}
+          disks:
+            - name: node3-disk-vda
+              bootOrder: 1
+              disk:
+                bus: virtio
+            - name: node3-disk-vdb
+              disk:
+                bus: virtio
+            - name: node3-disk-vdc
+              disk:
+                bus: virtio
+            - name: cloudinitdisk
+              disk:
+                bus: virtio
+          interfaces:
+          - bridge: {}
+            macAddress: 02:d3:76:00:00:20
+            model: virtio
+            name: eth0
+      hostname: node3
+      networks:
+      - name: eth0
+        multus:
+          networkName: '{{ include "kubespray.fullname" . }}.brvpc{{ .Values.network.host_interface }}.{{ .Values.network.vlan_id }}'
+      terminationGracePeriodSeconds: 0
+      volumes:
+        - name: node3-disk-vda
+          dataVolume:
+            name: node3-pvc-vda
+        - name: node3-disk-vdb
+          dataVolume:
+            name: node3-pvc-vdb
+        - name: node3-disk-vdc
+          dataVolume:
+            name: node3-pvc-vdc
+        - name: cloudinitdisk
+          cloudInitNoCloud:
+            secretRef:
+              name: fedora-cloudinit-userdata
+            networkDataSecretRef:
+              name: node3-cloudinit-networkdata

@@ -1,0 +1,19 @@
+#cloud-config
+disable_root: true
+ssh_pwauth: true
+chpasswd:
+  list: |
+    fedora:fedora
+  expire: False
+users:
+  - default
+  - name: fedora
+    sudo: ['ALL=(ALL) NOPASSWD:ALL']
+    groups: wheel
+    shell: /bin/bash
+    lock_passwd: false
+    ssh-authorized-keys:
+      - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQD8YB650lJMkoaK1qt3k7xlE/RTWG9sqN5AWncIh0MCv71ehUi8tB8eoNtwX8SZIA7o9WVt4fTOBm7wOHRAGlsiN9XJcU4zfHACvPpdb+u2TDiicRSWzc3YBWj7Ycjj6moN7mPZ6SkGk8WaDyvtvxV1iLBtxlY2FoGoxsSV7pueUXkOkLBH8GNyCjwq8h3vPXq8ywMZSO9dz153aLnRiiOKBOk7dGGHibGOx/ROR+CbFaGJpsiQncZt223ckgR23/PeoUS/vi6GsVibq/cWCa4HfAEqku9S1bbLmoMJdzlEMMQ4chVLeoADuVCJOfQ38pzMgv7axaAxMcVB2osBZtloxsu8XHxoPnQtNtMW8tZQ/gqJvZsIJZAMR8gWOjLOuFPHM58b3hNjsr9QzZjWZma71yzuV+lMPDhsXx+ZCIIVHcLmcWau18fsNAiKCHXQBBd4aLqKkG3vC7nQbj1xlOF/GAX9oJOCY7uY724eX9YThIottr0GRoFCMB/xGTeYVyE= ubuntu@bastion-unicorn-kubespray
+runcmd:
+  - "echo 'ZmFzdGVzdG1pcnJvcj0xCg==' | base64 -d | tee -a /etc/dnf/dnf.conf"
+  - "dnf update -y"

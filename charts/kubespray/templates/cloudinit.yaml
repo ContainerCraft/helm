@@ -1,0 +1,48 @@
+{{- $haproxyCfg := (tpl (.Files.Get "haproxy.cfg") .) | b64enc }}
+{{- $sshPubKey := "kubespray.sshpubkey" -}}
+{{- $secret := (lookup "v1" "Secret" .Release.Namespace "user1-kargo-sshpubkey") }}
+{{- if $secret }}
+{{- $sshPubKey = index $secret.data "sshpubkey" }}
+{{- end -}}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: vyos-cloudconfig
+data:
+  userdata: {{ (tpl (.Files.Get "userdata/vyos.yaml") .) | b64enc }}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: bastion-cloudinit-userdata
+data:
+  userdata: {{ (tpl (.Files.Get "userdata/bastion.yaml") .) | b64enc }}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: fedora-cloudinit-userdata
+data:
+  userdata: {{ (tpl (.Files.Get "userdata/fedora.yaml") .) | b64enc }}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: node1-cloudinit-networkdata
+data:
+  networkdata: {{ (tpl (.Files.Get "userdata/node1-networkdata.yaml") . ) | b64enc }}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: node2-cloudinit-networkdata
+data:
+  networkdata: {{ (tpl (.Files.Get "userdata/node2-networkdata.yaml") . ) | b64enc }}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: node3-cloudinit-networkdata
+data:
+  networkdata: {{ (tpl (.Files.Get "userdata/node3-networkdata.yaml") . ) | b64enc }}

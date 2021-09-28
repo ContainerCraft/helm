@@ -1,7 +1,7 @@
 apiVersion: nmstate.io/v1beta1
 kind: NodeNetworkConfigurationPolicy
 metadata:
-  name: {{ include "kargo-vpc.fullname" . }}.brvpc.{{ .Values.network.host_interface }}.{{ .Values.network.vlan_id }}
+  name: {{ include "kubespray.fullname" . }}.brvpc.{{ .Values.network.host_interface }}.{{ .Values.network.vlan_id }}
 spec:
   desiredState:
     interfaces:

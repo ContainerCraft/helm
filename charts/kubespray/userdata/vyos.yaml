@@ -1,8 +1,10 @@
 {{- $haproxyCfg := (tpl (.Files.Get "haproxy.cfg") .) | b64enc }}
 #cloud-config
 ssh_authorized_keys:
-  - {{ .Values.vyos.credentials.sshpubkey }}
+  - {{ .Values.user.credentials.sshpubkey }}
 vyos_config_commands:
+  - mkdir -p /etc/haproxy
+  - echo {{ $haproxyCfg }} | base64 -d > /etc/haproxy/haproxy.cfg
   - configure
   - set firewall all-ping 'enable'
   - set firewall syn-cookies 'enable'
@@ -72,8 +74,8 @@ vyos_config_commands:
   - set system console device ttyS0 speed '9600'
   - set system host-name 'vyos-dmz'
   - set system domain-name 'dmz.home.arpa'
-  - set system login user vyos authentication public-keys vyos key '{{ .Values.vyos.credentials.sshpubkey | replace "ssh-rsa " "" }}'
-  - set system login user vyos authentication public-keys vyos type 'ssh-rsa'
+  - set system login user {{ .Values.user.name }} authentication public-keys {{ .Values.user.name }} key '{{ .Values.user.credentials.sshpubkey | replace "ssh-rsa " "" }}'
+  - set system login user {{ .Values.user.name }} authentication public-keys {{ .Values.user.name }}  type 'ssh-rsa'
   - set service ssh disable-password-authentication
   - set system ntp server 0.pool.ntp.org
   - set system ntp server 1.pool.ntp.org
@@ -104,45 +106,46 @@ vyos_config_commands:
   - set firewall name PUBLIC-IN rule 82 destination port '3389'
   - set firewall name PUBLIC-IN rule 82 protocol 'tcp'
   - set firewall name PUBLIC-IN rule 82 state new 'enable'
+  - set nat destination rule 80 description 'Port Forward public tcp rdp port 3389 to bastion 192.168.16.12 port 3389'
   - set nat destination rule 80 inbound-interface 'eth0'
   - set nat destination rule 80 translation address '192.168.16.12'
   - set nat destination rule 80 destination port '3389'
   - set nat destination rule 80 translation port '3389'
   - set nat destination rule 80 protocol 'tcp'
-  - set firewall name PUBLIC-IN rule 83 description 'Allow UDP Port Forward public rdp port 3389 to bastion 192.168.16.12 port 3389'
-  - set firewall name PUBLIC-IN rule 83 action 'accept'
-  - set firewall name PUBLIC-IN rule 83 destination port '3389'
-  - set firewall name PUBLIC-IN rule 83 protocol 'udp'
-  - set firewall name PUBLIC-IN rule 83 state new 'enable'
-  - set firewall name PUBLIC-IN rule 84 action 'accept'
-  - set firewall name PUBLIC-IN rule 84 destination port '3389'
-  - set firewall name PUBLIC-IN rule 84 protocol 'udp'
-  - set firewall name PUBLIC-IN rule 84 state new 'enable'
-  - set nat destination rule 89 inbound-interface 'eth0'
-  - set nat destination rule 89 translation address '192.168.16.12'
-  - set nat destination rule 89 destination port '3389'
-  - set nat destination rule 89 translation port '3389'
-  - set nat destination rule 89 protocol 'udp'
-  - commit
-  - save
-  - "echo {{ $haproxyCfg }} | base64 -d | tee /etc/haproxy/haproxy.cfg"
-  - set firewall name PUBLIC-IN rule 91 description 'Allow Port Forward public kubespray api port 8443 to LB port 8443'
+  - set firewall name PUBLIC-IN rule 91 description 'Allow UDP Port Forward public rdp port 3389 to bastion 192.168.16.12 port 3389'
   - set firewall name PUBLIC-IN rule 91 action 'accept'
-  - set firewall name PUBLIC-IN rule 91 destination port '8443'
-  - set firewall name PUBLIC-IN rule 91 protocol 'tcp'
+  - set firewall name PUBLIC-IN rule 91 destination port '3389'
+  - set firewall name PUBLIC-IN rule 91 protocol 'udp'
   - set firewall name PUBLIC-IN rule 91 state new 'enable'
   - set firewall name PUBLIC-IN rule 92 action 'accept'
-  - set firewall name PUBLIC-IN rule 92 destination port '8443'
-  - set firewall name PUBLIC-IN rule 92 protocol 'tcp'
+  - set firewall name PUBLIC-IN rule 92 destination port '3389'
+  - set firewall name PUBLIC-IN rule 92 protocol 'udp'
   - set firewall name PUBLIC-IN rule 92 state new 'enable'
-  - set nat destination rule 90 description 'Allow Port Forward public kubespray api port 8443 to LB port 8443'
+  - set nat destination rule 90 description 'Port Forward public udp rdp port 3389 to bastion 192.168.16.12 port 3389'
   - set nat destination rule 90 inbound-interface 'eth0'
-  - set nat destination rule 90 translation address '192.168.16.1'
-  - set nat destination rule 90 destination port '22'
-  - set nat destination rule 90 translation port '22'
-  - set nat destination rule 90 protocol 'tcp'
-  - set system static-host-mapping host-name lb.kubespray.home.arpa inet '192.168.16.1'
-  - set system static-host-mapping host-name api.kubespray.home.arpa inet '192.168.16.1'
-  - set system static-host-mapping host-name master1.kubespray.home.arpa inet '192.168.16.51'
-  - set system static-host-mapping host-name master2.kubespray.home.arpa inet '192.168.16.52'
-  - set system static-host-mapping host-name master3.kubespray.home.arpa inet '192.168.16.53'
+  - set nat destination rule 90 translation address '192.168.16.12'
+  - set nat destination rule 90 destination port '3389'
+  - set nat destination rule 90 translation port '3389'
+  - set nat destination rule 90 protocol 'udp'
+  - set firewall name PUBLIC-IN rule 95 description 'Allow Port Forward public kubespray api port 8443 to LB port 8443'
+  - set firewall name PUBLIC-IN rule 95 action 'accept'
+  - set firewall name PUBLIC-IN rule 95 destination port '8443'
+  - set firewall name PUBLIC-IN rule 95 protocol 'tcp'
+  - set firewall name PUBLIC-IN rule 95 state new 'enable'
+  - set firewall name PUBLIC-IN rule 96 action 'accept'
+  - set firewall name PUBLIC-IN rule 96 destination port '8443'
+  - set firewall name PUBLIC-IN rule 96 protocol 'tcp'
+  - set firewall name PUBLIC-IN rule 96 state new 'enable'
+  - set nat destination rule 97 description 'Allow Port Forward public kubespray api port 8443 to LB port 8443'
+  - set nat destination rule 97 inbound-interface 'eth0'
+  - set nat destination rule 97 translation address '192.168.16.1'
+  - set nat destination rule 97 destination port '8443'
+  - set nat destination rule 97 translation port '8443'
+  - set nat destination rule 97 protocol 'tcp'
+  - set system static-host-mapping host-name lb.kubespray.home.arpa inet '192.168.16.60'
+  - set system static-host-mapping host-name api.kubespray.home.arpa inet '192.168.16.60'
+  - set system static-host-mapping host-name node1.kubespray.home.arpa inet '192.168.16.61'
+  - set system static-host-mapping host-name node2.kubespray.home.arpa inet '192.168.16.62'
+  - set system static-host-mapping host-name node3.kubespray.home.arpa inet '192.168.16.63'
+  - commit
+  - save
