@@ -84,9 +84,9 @@ affinity: {}
 kong:
   enabled: true
   portal:
-    enabled: 'false'
+    enabled: false
   ingressController:
-    installCRDs: 'false'
+    installCRDs: false
 
 cert-manager:
   enabled: true

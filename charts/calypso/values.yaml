@@ -68,6 +68,8 @@ rook-ceph-cluster:
   toolbox:
     enabled: true
     image: rook/ceph:v1.7.3
+  crds:
+    enabled: false
   monitoring:
     enabled: false
   cephClusterSpec:
