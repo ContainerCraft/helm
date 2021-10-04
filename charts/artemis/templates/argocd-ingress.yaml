@@ -1,0 +1,59 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: argocd-server-ingress
+  annotations:
+    kubernetes.io/ingress.class: "kong"
+    konghq.com/https-redirect-status-code: "301"
+    konghq.com/protocols: "http"
+    konghq.com/protocol: "https"
+   #konghq.com/preserve-host: "true"
+   #cert-manager.io/common-name: "argocd.home.arpa"
+   #cert-manager.io/cluster-issuer: certman-selfsigned-issuer
+   #kubernetes.io/tls-acme: "true"
+spec:
+  tls:
+  - hosts:
+    - argocd.home.arpa
+    secretName: argocd-secret
+  rules:
+  - host: argocd.home.arpa
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: argocd-server
+            port:
+              name: https
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: argocd-server-grpc-ingress
+  annotations:
+    kubernetes.io/ingress.class: "kong"
+    konghq.com/https-redirect-status-code: "301"
+    konghq.com/protocols: "grpc,grpcs"
+    konghq.com/protocol: "https"
+   #konghq.com/preserve-host: "true"
+   #cert-manager.io/common-name: "argocd.home.arpa"
+   #cert-manager.io/cluster-issuer: certman-selfsigned-issuer
+   #kubernetes.io/tls-acme: "true"
+spec:
+  tls:
+  - hosts:
+    - grpc.argocd.home.arpa
+    secretName: argocd-secret
+  rules:
+  - host: grpc.argocd.home.arpa
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: argocd-server
+            port:
+              name: https
