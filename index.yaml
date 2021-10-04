@@ -2,6 +2,32 @@ apiVersion: v1
 entries:
   artemis:
   - apiVersion: v2
+    appVersion: 0.0.2
+    created: "2021-10-04T22:41:47.397455472Z"
+    dependencies:
+    - name: argo-cd
+      repository: https://argoproj.github.io/argo-helm
+      version: 3.22.1
+    - condition: cert-manager.enabled
+      name: cert-manager
+      repository: https://charts.jetstack.io
+      version: v1.5.4
+    - condition: metallb.enabled
+      name: metallb
+      repository: https://metallb.github.io/metallb
+      version: v0.10.2
+    - condition: kong.enabled
+      name: kong
+      repository: https://charts.konghq.com
+      version: 2.3.0
+    description: HomeLab GitOps Platform - ArgoCD Cert-Manager MetalLB Kong ++
+    digest: 91e81c524d04f3f49f3c4134504db486353894dd5e5044f6a6560fe820e7ecbe
+    name: artemis
+    type: application
+    urls:
+    - https://github.com/ContainerCraft/helm/releases/download/artemis-0.0.2/artemis-0.0.2.tgz
+    version: 0.0.2
+  - apiVersion: v2
     appVersion: 0.00.1
     created: "2021-10-04T19:40:56.694808812Z"
     dependencies:
@@ -30,6 +56,23 @@ entries:
   calypso:
   - apiVersion: v2
     appVersion: 1.16.0
+    created: "2021-10-04T22:41:47.600351901Z"
+    dependencies:
+    - name: rook-ceph
+      repository: https://charts.rook.io/release
+      version: v1.7.4
+    - name: rook-ceph-cluster
+      repository: https://charts.rook.io/release
+      version: v1.7.4
+    description: HomeLab Storage Platform - Rook Ceph Deployment
+    digest: 4f89020a01db4a7798c58d5ce4f3fdf3a29cb5fa1a139203c7113eb188ba257a
+    name: calypso
+    type: application
+    urls:
+    - https://github.com/ContainerCraft/helm/releases/download/calypso-0.0.2/calypso-0.0.2.tgz
+    version: 0.0.2
+  - apiVersion: v2
+    appVersion: 1.16.0
     created: "2021-10-04T19:40:56.878704853Z"
     dependencies:
     - name: rook-ceph
@@ -48,6 +91,16 @@ entries:
   cluster-network-addons:
   - apiVersion: v2
     appVersion: v0.58.2
+    created: "2021-10-04T22:41:47.795508637Z"
+    description: Kubevirt Cluster Network Addons Operator
+    digest: 6be59489db037646e1b0683f0db0e7ec40f4047e60a7eb87eb90b44efe5c728d
+    name: cluster-network-addons
+    type: application
+    urls:
+    - https://github.com/ContainerCraft/helm/releases/download/cluster-network-addons-0.0.2/cluster-network-addons-0.0.2.tgz
+    version: 0.0.2
+  - apiVersion: v2
+    appVersion: v0.58.2
     created: "2021-10-04T19:40:57.059919369Z"
     description: Kubevirt Cluster Network Addons Operator Helm Chart
     digest: 5fa1326b42ff3875850fa2f39adcec8ca7d980c29b50d5ed670ab6fae78e8970
@@ -59,6 +112,16 @@ entries:
   hostpath-provisioner:
   - apiVersion: v2
     appVersion: v0.9.0
+    created: "2021-10-04T22:41:47.989601392Z"
+    description: Kubevirt Hostpath Provisioner Operatore Helm Chart
+    digest: 6936c43f53e96ee7359e5d442e6d24c9a0e08680fe761356f794bea75209fe5f
+    name: hostpath-provisioner
+    type: application
+    urls:
+    - https://github.com/ContainerCraft/helm/releases/download/hostpath-provisioner-0.0.2/hostpath-provisioner-0.0.2.tgz
+    version: 0.0.2
+  - apiVersion: v2
+    appVersion: v0.9.0
     created: "2021-10-04T19:40:57.224039333Z"
     description: Kubevirt Hostpath Provisioner Storage Operatore Helm Chart
     digest: e48a280e7bcce532338bb16a86b17fe40313197d8e1aabb11ea3a0009a1971f0
@@ -68,6 +131,16 @@ entries:
     - https://github.com/ContainerCraft/helm/releases/download/hostpath-provisioner-0.0.1/hostpath-provisioner-0.0.1.tgz
     version: 0.0.1
   kargo:
+  - apiVersion: v2
+    appVersion: 1.16.0
+    created: "2021-10-04T22:41:48.189270674Z"
+    description: HomeLab KubeVirt Hyper Converged Kubernetes Native Hypervisor
+    digest: 93045fff39ab88f05cfdab6e0916958c4423d895bd9e48253a0a86c52a7effc8
+    name: kargo
+    type: application
+    urls:
+    - https://github.com/ContainerCraft/helm/releases/download/kargo-0.0.2/kargo-0.0.2.tgz
+    version: 0.0.2
   - apiVersion: v2
     appVersion: 1.16.0
     created: "2021-10-04T19:40:57.368029217Z"
@@ -171,4 +244,4 @@ entries:
     urls:
     - https://github.com/ContainerCraft/helm/releases/download/kubespray-0.0.1/kubespray-0.0.1.tgz
     version: 0.0.1
-generated: "2021-10-04T19:40:57.512923509Z"
+generated: "2021-10-04T22:41:48.189305777Z"
