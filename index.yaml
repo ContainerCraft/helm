@@ -1,5 +1,83 @@
 apiVersion: v1
 entries:
+  artemis:
+  - apiVersion: v2
+    appVersion: 0.00.1
+    created: "2021-10-04T19:40:56.694808812Z"
+    dependencies:
+    - name: argo-cd
+      repository: https://argoproj.github.io/argo-helm
+      version: 3.22.1
+    - condition: cert-manager.enabled
+      name: cert-manager
+      repository: https://charts.jetstack.io
+      version: v1.5.4
+    - condition: metallb.enabled
+      name: metallb
+      repository: https://metallb.github.io/metallb
+      version: v0.10.2
+    - condition: kong.enabled
+      name: kong
+      repository: https://charts.konghq.com
+      version: 2.3.0
+    description: A Helm chart for Kubernetes
+    digest: 2303947d2240a73c3fae98a968394a7ac39926ea590373efbe30bd3c98dc956e
+    name: artemis
+    type: application
+    urls:
+    - https://github.com/ContainerCraft/helm/releases/download/artemis-0.0.1/artemis-0.0.1.tgz
+    version: 0.0.1
+  calypso:
+  - apiVersion: v2
+    appVersion: 1.16.0
+    created: "2021-10-04T19:40:56.878704853Z"
+    dependencies:
+    - name: rook-ceph
+      repository: https://charts.rook.io/release
+      version: v1.7.4
+    - name: rook-ceph-cluster
+      repository: https://charts.rook.io/release
+      version: v1.7.4
+    description: A Helm chart for Kubernetes
+    digest: 9784d1b8a7cbb845af86c71a806c97d4746da41710d2b3a33cb1b6570cd5dd8b
+    name: calypso
+    type: application
+    urls:
+    - https://github.com/ContainerCraft/helm/releases/download/calypso-0.0.1/calypso-0.0.1.tgz
+    version: 0.0.1
+  cluster-network-addons:
+  - apiVersion: v2
+    appVersion: v0.58.2
+    created: "2021-10-04T19:40:57.059919369Z"
+    description: Kubevirt Cluster Network Addons Operator Helm Chart
+    digest: 5fa1326b42ff3875850fa2f39adcec8ca7d980c29b50d5ed670ab6fae78e8970
+    name: cluster-network-addons
+    type: application
+    urls:
+    - https://github.com/ContainerCraft/helm/releases/download/cluster-network-addons-0.0.1/cluster-network-addons-0.0.1.tgz
+    version: 0.0.1
+  hostpath-provisioner:
+  - apiVersion: v2
+    appVersion: v0.9.0
+    created: "2021-10-04T19:40:57.224039333Z"
+    description: Kubevirt Hostpath Provisioner Storage Operatore Helm Chart
+    digest: e48a280e7bcce532338bb16a86b17fe40313197d8e1aabb11ea3a0009a1971f0
+    name: hostpath-provisioner
+    type: application
+    urls:
+    - https://github.com/ContainerCraft/helm/releases/download/hostpath-provisioner-0.0.1/hostpath-provisioner-0.0.1.tgz
+    version: 0.0.1
+  kargo:
+  - apiVersion: v2
+    appVersion: 1.16.0
+    created: "2021-10-04T19:40:57.368029217Z"
+    description: A Helm chart for Kubernetes
+    digest: 806c8bd58d082875d5339f5711af710b6e13296ccf6b6371eb8606bb16cd92ec
+    name: kargo
+    type: application
+    urls:
+    - https://github.com/ContainerCraft/helm/releases/download/kargo-0.0.1/kargo-0.0.1.tgz
+    version: 0.0.1
   kargo-vpc:
   - apiVersion: v2
     appVersion: 0.0.3
@@ -75,6 +153,16 @@ entries:
   kubespray:
   - apiVersion: v2
     appVersion: 0.0.1
+    created: "2021-10-04T19:40:57.512902309Z"
+    description: CCIO Kargo Kubespray Cluster
+    digest: e2526786f423acfc8c17f519c7fd02d065658a08718a285f626bd3a9b5810880
+    name: kubespray
+    type: application
+    urls:
+    - https://github.com/ContainerCraft/helm/releases/download/kubespray-0.0.2/kubespray-0.0.2.tgz
+    version: 0.0.2
+  - apiVersion: v2
+    appVersion: 0.0.1
     created: "2021-09-28T05:34:49.931424679Z"
     description: CCIO Kargo Kubespray Cluster
     digest: 318ff45bb6883e52d24721cb7276cbd08cdc716bc8a75a9085c726d0c4b8c842
@@ -83,4 +171,4 @@ entries:
     urls:
     - https://github.com/ContainerCraft/helm/releases/download/kubespray-0.0.1/kubespray-0.0.1.tgz
     version: 0.0.1
-generated: "2021-09-28T05:34:49.931451179Z"
+generated: "2021-10-04T19:40:57.512923509Z"
