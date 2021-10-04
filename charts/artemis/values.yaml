@@ -105,7 +105,11 @@ argo-cd:
   nameOverride: argocd
   fullnameOverride: ""
   kubeVersionOverride: ""
-  
+
+  server:
+    extraArgs:
+    - --insecure
+
   ## Argo Configs
   configs:
     ## External Cluster Credentials

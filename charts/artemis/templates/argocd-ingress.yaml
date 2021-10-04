@@ -24,7 +24,7 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: argocd-server
+            name: artemis-argocd-server
             port:
               name: https
 ---
@@ -54,6 +54,6 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: argocd-server
+            name: artemis-argocd-server
             port:
               name: https

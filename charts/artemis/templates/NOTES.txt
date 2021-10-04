@@ -12,4 +12,4 @@ ABOUT:
 COMMANDS:
   ~$ kubectl get -n artemis svc
   ~$ kubectl get -n artemis po
-
+  ~$ kubectl get secret -n artemis argocd-initial-admin-secret -o=jsonpath={.data.password} | base64 -d
