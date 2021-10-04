@@ -113,24 +113,33 @@ spec:
             ssh_pwauth: true
             chpasswd:
               list: |
-                 {{ .Values.user.name }}:{{ .Values.user.credentials.pass }}
+                 {{ .Values.user.name }}:{{ .Values.user.credentials.password }}
               expire: False
             users:
               - name: {{ .Values.user.name }}
                 sudo: ['ALL=(ALL) NOPASSWD:ALL']
-                groups: sudo,lxd,docker
+                groups: sudo,xrdp,lxd,docker,ssl-cert
                 shell: /bin/bash
                 ssh-authorized-keys:
                   - {{ .Values.user.credentials.sshpubkey }}
             hostname: bastion-{{ include "kubespray.fullname" . }}
+            growpart:
+              mode: auto
+              devices: ['/']
+              ignore_growroot_disabled: true
+            package_upgrade: true
+            packages:
+              - jq
+              - vim
+              - xrdp
+              - docker.io
+              - apache2-utils
+              - libvirt-clients
+              - gnome-tweak-tool
+              - python3 python3-pip
+              - ubuntu-desktop-minimal
             runcmd:
-              - "systemctl enable --now sshd"
+              - "lxd init --auto"
+              - "apt-get remove apport -y"
               - "mkdir -p /home/{{ .Values.user.name }}/.kube"
               - "chown -R {{ .Values.user.name }}:{{ .Values.user.name }} /home/{{ .Values.user.name }}"
-              - "usermod -a -G xrdp {{ .Values.user.name }}"
-              - "usermod -a -G ssl-cert {{ .Values.user.name }}"
-              - "curl -L https://mirror.openshift.com/pub/openshift-v4/clients/ocp/latest/openshift-install-linux.tar.gz | tar xzvf - --directory /usr/local/bin oc kubectl"
-              - "curl -L https://mirror.openshift.com/pub/openshift-v4/clients/ocp/latest/openshift-client-linux.tar.gz | tar xzvf - --directory /usr/local/bin openshift-install"
-              - "apt-get update"
-              - "apt-get -y upgrade"
-              - "apt-get install --install-recommends -y jq xrdp gnome-tweak-tool {{ .Values.user.name }}-desktop docker.io apache2-utils libvirt-clients"

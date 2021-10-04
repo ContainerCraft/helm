@@ -1,0 +1,57 @@
+# helm install rook-ceph --namespace rook-ceph --create-namespace rook-release/rook-ceph --values ./rook/operator-values.yml --set crds.enabled=true
+image:
+  prefix: rook
+  repository: rook/ceph
+  tag: v1.7.2
+  pullPolicy: IfNotPresent
+
+crds:
+  enabled: false
+resources:
+  limits:
+    cpu: 500m
+    memory: 256Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+nodeSelector: {}
+tolerations: []
+unreachableNodeTolerationSeconds: 5
+currentNamespaceOnly: false
+annotations: {}
+## TRACE, DEBUG, INFO, NOTICE, WARNING, ERROR or CRITICAL
+logLevel: INFO
+rbacEnable: true
+pspEnable: true
+csi:
+  enableRbdDriver: true
+  enableCephfsDriver: true
+  enableGrpcMetrics: false
+  #enableCSIHostNetwork: true
+  enableCephfsSnapshotter: true
+  enableRBDSnapshotter: true
+  rbdFSGroupPolicy: "ReadWriteOnceWithFSType"
+  cephFSFSGroupPolicy: "None"
+  enableOMAPGenerator: false
+  # Supported values from 0 to 5. 0 for general useful logs, 5 for trace level verbosity.
+  #logLevel: 0
+  #rbdPluginUpdateStrategy: OnDelete
+  allowUnsupportedVersion: false
+  forceCephFSKernelClient: true
+  volumeReplication:
+    enabled: false
+    #image: "quay.io/csiaddons/volumereplication-operator:v0.1.0"
+enableDiscoveryDaemon: false
+cephCommandsTimeoutSeconds: "25"
+allowMultipleFilesystems: true
+## if true, run rook operator on the host network
+#useOperatorHostNetwork: true
+enableSelinuxRelabeling: true
+hostpathRequiresPrivileged: true
+# Disable automatic orchestration when new devices are discovered.
+disableDeviceHotplug: false
+# Blacklist certain disks according to the regex provided.
+#discoverDaemonUdev: ["nvme0n1"]
+# Whether the OBC provisioner should watch on the operator namespace or not, if not the namespace of the cluster will be used
+enableOBCWatchOperatorNamespace: true

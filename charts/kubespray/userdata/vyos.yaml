@@ -1,10 +1,14 @@
-{{- $haproxyCfg := (tpl (.Files.Get "haproxy.cfg") .) | b64enc }}
 #cloud-config
+write_files:
+- encoding: b64
+  content: {{ tpl (.Files.Get "userdata/haproxy.cfg") . | b64enc }}
+  owner: root:root
+  path: /etc/haproxy/haproxy.cfg
+  permissions: '0644'
 ssh_authorized_keys:
   - {{ .Values.user.credentials.sshpubkey }}
 vyos_config_commands:
   - mkdir -p /etc/haproxy
-  - echo {{ $haproxyCfg }} | base64 -d > /etc/haproxy/haproxy.cfg
   - configure
   - set firewall all-ping 'enable'
   - set firewall syn-cookies 'enable'
@@ -59,7 +63,7 @@ vyos_config_commands:
   - set interfaces loopback lo
   - set nat source rule 100 outbound-interface 'eth0'
   - set nat source rule 100 translation address 'masquerade'
-  - set protocols static route 0.0.0.0/0 next-hop 192.168.11
+  - set protocols static route 0.0.0.0/0 next-hop 192.168.1.1
   - set service dns forwarding cache-size '1000'
   - set service dns forwarding allow-from '0.0.0.0/0'
   - set service dns forwarding listen-address '0.0.0.0'
@@ -72,8 +76,8 @@ vyos_config_commands:
   - delete service ssh port '22'
   - set system config-management commit-revisions '100'
   - set system console device ttyS0 speed '9600'
-  - set system host-name 'vyos-dmz'
-  - set system domain-name 'dmz.home.arpa'
+  - set system host-name 'voyager'
+  - set system domain-name 'kubespray.home.arpa'
   - set system login user {{ .Values.user.name }} authentication public-keys {{ .Values.user.name }} key '{{ .Values.user.credentials.sshpubkey | replace "ssh-rsa " "" }}'
   - set system login user {{ .Values.user.name }} authentication public-keys {{ .Values.user.name }}  type 'ssh-rsa'
   - set service ssh disable-password-authentication
@@ -127,25 +131,63 @@ vyos_config_commands:
   - set nat destination rule 90 destination port '3389'
   - set nat destination rule 90 translation port '3389'
   - set nat destination rule 90 protocol 'udp'
-  - set firewall name PUBLIC-IN rule 95 description 'Allow Port Forward public kubespray api port 8443 to LB port 8443'
-  - set firewall name PUBLIC-IN rule 95 action 'accept'
-  - set firewall name PUBLIC-IN rule 95 destination port '8443'
-  - set firewall name PUBLIC-IN rule 95 protocol 'tcp'
-  - set firewall name PUBLIC-IN rule 95 state new 'enable'
-  - set firewall name PUBLIC-IN rule 96 action 'accept'
-  - set firewall name PUBLIC-IN rule 96 destination port '8443'
-  - set firewall name PUBLIC-IN rule 96 protocol 'tcp'
-  - set firewall name PUBLIC-IN rule 96 state new 'enable'
-  - set nat destination rule 97 description 'Allow Port Forward public kubespray api port 8443 to LB port 8443'
-  - set nat destination rule 97 inbound-interface 'eth0'
-  - set nat destination rule 97 translation address '192.168.16.1'
-  - set nat destination rule 97 destination port '8443'
-  - set nat destination rule 97 translation port '8443'
-  - set nat destination rule 97 protocol 'tcp'
-  - set system static-host-mapping host-name lb.kubespray.home.arpa inet '192.168.16.60'
+  - set system static-host-mapping host-name node1 inet '192.168.16.61'
+  - set system static-host-mapping host-name node2 inet '192.168.16.62'
+  - set system static-host-mapping host-name node3 inet '192.168.16.63'
+  - set system static-host-mapping host-name node1 inet '192.168.16.61'
+  - set system static-host-mapping host-name node2 inet '192.168.16.62'
+  - set system static-host-mapping host-name node3 inet '192.168.16.63'
+  - set system static-host-mapping host-name argocd.home.arpa inet '192.168.16.66'
+  - set system static-host-mapping host-name kubespray.home.arpa inet '192.168.16.60'
+  - set system static-host-mapping host-name grpc.argocd.home.arpa inet '192.168.16.66'
   - set system static-host-mapping host-name api.kubespray.home.arpa inet '192.168.16.60'
   - set system static-host-mapping host-name node1.kubespray.home.arpa inet '192.168.16.61'
   - set system static-host-mapping host-name node2.kubespray.home.arpa inet '192.168.16.62'
   - set system static-host-mapping host-name node3.kubespray.home.arpa inet '192.168.16.63'
+  - set firewall name PUBLIC-IN rule 38 description 'Allow TCP Port Forward public HTTPS port 443 to LoadBalancer VIP 192.168.16.60 port 443'
+  - set firewall name PUBLIC-IN rule 38 action 'accept'
+  - set firewall name PUBLIC-IN rule 38 destination port '80'
+  - set firewall name PUBLIC-IN rule 38 protocol 'tcp'
+  - set firewall name PUBLIC-IN rule 38 state new 'enable'
+  - set firewall name PUBLIC-IN rule 39 action 'accept'
+  - set firewall name PUBLIC-IN rule 39 destination port '80'
+  - set firewall name PUBLIC-IN rule 39 protocol 'tcp'
+  - set firewall name PUBLIC-IN rule 39 state new 'enable'
+  - set nat destination rule 37 description 'Allow TCP Port Forward public HTTPS port 443 to LoadBalancer VIP 192.168.16.60 port 443'
+  - set nat destination rule 37 inbound-interface 'eth0'
+  - set nat destination rule 37 translation address '192.168.16.60'
+  - set nat destination rule 37 destination port '80'
+  - set nat destination rule 37 translation port '80'
+  - set nat destination rule 37 protocol 'tcp'
+  - set firewall name PUBLIC-IN rule 41 description 'Allow TCP Port Forward public HTTPS port 443 to LoadBalancer VIP 192.168.16.60 port 443'
+  - set firewall name PUBLIC-IN rule 41 action 'accept'
+  - set firewall name PUBLIC-IN rule 41 destination port '443'
+  - set firewall name PUBLIC-IN rule 41 protocol 'tcp'
+  - set firewall name PUBLIC-IN rule 41 state new 'enable'
+  - set firewall name PUBLIC-IN rule 42 action 'accept'
+  - set firewall name PUBLIC-IN rule 42 destination port '443'
+  - set firewall name PUBLIC-IN rule 42 protocol 'tcp'
+  - set firewall name PUBLIC-IN rule 42 state new 'enable'
+  - set nat destination rule 40 description 'Allow TCP Port Forward public HTTPS port 443 to LoadBalancer VIP 192.168.16.60 port 443'
+  - set nat destination rule 40 inbound-interface 'eth0'
+  - set nat destination rule 40 translation address '192.168.16.60'
+  - set nat destination rule 40 destination port '443'
+  - set nat destination rule 40 translation port '443'
+  - set nat destination rule 40 protocol 'tcp'
+  - set firewall name PUBLIC-IN rule 43 description 'Allow TCP Port Forward public kubespray api port 8443 to LoadBalancer VIP 192.168.16.60'
+  - set firewall name PUBLIC-IN rule 43 action 'accept'
+  - set firewall name PUBLIC-IN rule 43 destination port '8443'
+  - set firewall name PUBLIC-IN rule 43 protocol 'tcp'
+  - set firewall name PUBLIC-IN rule 43 state new 'enable'
+  - set firewall name PUBLIC-IN rule 44 action 'accept'
+  - set firewall name PUBLIC-IN rule 44 destination port '8443'
+  - set firewall name PUBLIC-IN rule 44 protocol 'tcp'
+  - set firewall name PUBLIC-IN rule 44 state new 'enable'
+  - set nat destination rule 45 description 'Allow TCP Port Forward public kubespray api port 8443 to LoadBalancer VIP 192.168.16.60'
+  - set nat destination rule 45 inbound-interface 'eth0'
+  - set nat destination rule 45 translation address '192.168.16.60'
+  - set nat destination rule 45 destination port '8443'
+  - set nat destination rule 45 translation port '8443'
+  - set nat destination rule 45 protocol 'tcp'
   - commit
   - save

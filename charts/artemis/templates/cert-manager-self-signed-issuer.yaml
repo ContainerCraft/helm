@@ -1,0 +1,33 @@
+---
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: artemis-selfsign-ca
+spec:
+  selfSigned: {}
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: artemis-selfsign-ca-rootcert
+spec:
+  isCA: true
+  commonName: artemis-selfsigned-issuer
+  secretName: artemis-selfsigned-issuer
+  privateKey:
+    algorithm: ECDSA
+    size: 256
+  issuerRef:
+    name: artemis-selfsign-ca
+    kind: ClusterIssuer
+    group: cert-manager.io
+  renewBefore: 360h
+  duration: 2160h
+---
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: artemis-selfsigned-issuer
+spec:
+  ca:
+    secretName: artemis-selfsigned-issuer

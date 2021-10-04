@@ -1,8 +1,8 @@
 ---
-apiVersion: kubevirt.io/v1alpha3
+apiVersion: kubevirt.io/v1
 kind: VirtualMachine
 metadata:
-  name: node1
+  name: node1-{{ include "kubespray.fullname" . }}
   labels:
     app: kubespray
     cluster: kubespray
@@ -10,6 +10,35 @@ metadata:
 spec:
   running: true
   dataVolumeTemplates:
+  - metadata:
+      name: node1-pvc-vda
+      annotations:
+        kubevirt.io/provisionOnNode: node4
+      labels:
+        app: kubespray
+    spec:
+      source:
+        registry:
+          tag: {{ .Values.nodes.masters.source.tag }}
+          url: "docker://{{ .Values.nodes.masters.source.image }}"
+          imagePullPolicy: {{ .Values.nodes.masters.source.imagePullPolicy }}
+      accessModes:
+      - "{{ .Values.nodes.masters.storage.vda.accessModes }}"
+      capacity:
+        storage: "{{ .Values.nodes.masters.storage.vda.size }}"
+      config:
+        featureGates:
+        - HonorWaitForFirstConsumer
+      pvc:
+        accessModes:
+        - "{{ .Values.nodes.masters.storage.vda.accessModes }}"
+        resources:
+          requests:
+            storage: "{{ .Values.nodes.masters.storage.vda.size }}"
+        storageClassName: "{{ .Values.nodes.masters.storage.vda.class }}"
+      storageClassName: "{{ .Values.nodes.masters.storage.vda.class }}"
+      volumeMode: {{ .Values.nodes.masters.storage.vda.volumeMode }}
+      persistentVolumeReclaimPolicy: Delete
   - metadata:
       name: node1-pvc-vdb
       annotations:
@@ -20,22 +49,22 @@ spec:
       source:
         blank: {}
       accessModes:
-      - ReadWriteOnce
+      - "{{ .Values.nodes.masters.storage.vda.accessModes }}"
       capacity:
-        storage: 64G
+        storage: "{{ .Values.nodes.masters.storage.vdb.size }}"
       config:
         featureGates:
         - HonorWaitForFirstConsumer
       pvc:
         accessModes:
-        - ReadWriteOnce
+        - "{{ .Values.nodes.masters.storage.vda.accessModes }}"
         resources:
           requests:
-            storage: 64G
-        storageClassName: hostpath-provisioner
+            storage: "{{ .Values.nodes.masters.storage.vdb.size }}"
+        storageClassName: "{{ .Values.nodes.masters.storage.vdb.class }}"
+      storageClassName: "{{ .Values.nodes.masters.storage.vdb.class }}"
+      volumeMode: {{ .Values.nodes.masters.storage.vdb.volumeMode }}
       persistentVolumeReclaimPolicy: Delete
-      storageClassName: hostpath-provisioner
-      volumeMode: Block
   - metadata:
       name: node1-pvc-vdc
       annotations:
@@ -46,50 +75,48 @@ spec:
       source:
         blank: {}
       accessModes:
-      - ReadWriteOnce
+      - "{{ .Values.nodes.masters.storage.vda.accessModes }}"
       capacity:
-        storage: 64G
+        storage: "{{ .Values.nodes.masters.storage.vdc.size }}"
       config:
         featureGates:
         - HonorWaitForFirstConsumer
       pvc:
         accessModes:
-        - ReadWriteOnce
+        - "{{ .Values.nodes.masters.storage.vda.accessModes }}"
         resources:
           requests:
-            storage: 64G
-        storageClassName: hostpath-provisioner
+            storage: "{{ .Values.nodes.masters.storage.vdc.size }}"
+        storageClassName: "{{ .Values.nodes.masters.storage.vdc.class }}"
+      storageClassName: "{{ .Values.nodes.masters.storage.vdc.class }}"
+      volumeMode: {{ .Values.nodes.masters.storage.vdc.volumeMode }}
       persistentVolumeReclaimPolicy: Delete
-      storageClassName: hostpath-provisioner
-      volumeMode: Block
   - metadata:
-      name: node1-pvc-vda
+      name: node1-pvc-vdd
       annotations:
         kubevirt.io/provisionOnNode: node4
       labels:
         app: kubespray
     spec:
       source:
-        registry:
-          url: "docker://quay.io/containercraft/fedora:34"
-          imagePullPolicy: IfNotPresent
+        blank: {}
       accessModes:
-      - ReadWriteOnce
+      - "{{ .Values.nodes.masters.storage.vda.accessModes }}"
       capacity:
-        storage: 64G
+        storage: "{{ .Values.nodes.masters.storage.vdd.size }}"
       config:
         featureGates:
         - HonorWaitForFirstConsumer
       pvc:
         accessModes:
-        - ReadWriteOnce
+        - "{{ .Values.nodes.masters.storage.vda.accessModes }}"
         resources:
           requests:
-            storage: 64G
-        storageClassName: hostpath-provisioner
+            storage: "{{ .Values.nodes.masters.storage.vdd.size }}"
+        storageClassName: "{{ .Values.nodes.masters.storage.vdd.class }}"
+      storageClassName: "{{ .Values.nodes.masters.storage.vdd.class }}"
+      volumeMode: {{ .Values.nodes.masters.storage.vdd.volumeMode }}
       persistentVolumeReclaimPolicy: Delete
-      storageClassName: hostpath-provisioner
-      volumeMode: Block
   template:
     spec:
       evictionStrategy: LiveMigrate
@@ -100,17 +127,17 @@ spec:
           timer: {}
           utc: {}
         cpu:
-          cores: 4
-          threads: 2
-          sockets: 2
-          model: host-passthrough
+          model: {{ .Values.nodes.masters.cpu.model }}
+          threads: {{ .Values.nodes.masters.cpu.cores }}
           dedicatedCpuPlacement: false
+          sockets: 1
+          cores: 1
         resources:
           requests:
-            memory: 16G
+            memory: {{ .Values.nodes.masters.memory }}
             devices.kubevirt.io/kvm: "1"
           limits:
-            memory: 16G
+            memory: {{ .Values.nodes.masters.memory }}
         machine:
           type: pc-q35-rhel8.3.0
         devices:
@@ -130,6 +157,9 @@ spec:
             - name: node1-disk-vdc
               disk:
                 bus: virtio
+            - name: node1-disk-vdd
+              disk:
+                bus: virtio
             - name: cloudinitdisk
               disk:
                 bus: virtio
@@ -144,6 +174,15 @@ spec:
         multus:
           networkName: '{{ include "kubespray.fullname" . }}.brvpc{{ .Values.network.host_interface }}.{{ .Values.network.vlan_id }}'
       terminationGracePeriodSeconds: 0
+      accessCredentials:
+      - sshPublicKey:
+          source:
+            secret:
+              secretName: {{ .Values.user.credentials.sshpubkeysecret }}
+          propagationMethod:
+            qemuGuestAgent:
+              users:
+              - "{{ .Values.user.name }}"
       volumes:
         - name: node1-disk-vda
           dataVolume:
@@ -154,6 +193,9 @@ spec:
         - name: node1-disk-vdc
           dataVolume:
             name: node1-pvc-vdc
+        - name: node1-disk-vdd
+          dataVolume:
+            name: node1-pvc-vdd
         - name: cloudinitdisk
           cloudInitNoCloud:
             secretRef:

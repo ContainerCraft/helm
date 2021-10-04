@@ -1,0 +1,216 @@
+clusterName: rook-ceph
+operatorNamespace: rook-ceph
+toolbox:
+  enabled: true
+  image: rook/ceph:v1.7.3
+monitoring:
+  enabled: false
+cephClusterSpec:
+  cephVersion:
+    image: "quay.io/ceph/ceph:v16"
+    allowUnsupported: false
+  dataDirHostPath: /var/lib/rook
+  waitTimeoutForHealthyOSDInMinutes: 10
+  mon:
+    count: 3
+    allowMultiplePerNode: false
+  mgr:
+    count: 1
+  dashboard:
+    enabled: false
+  crashCollector:
+    disable: false
+  cleanupPolicy:
+    # To destroy all Rook data on hosts during uninstall, confirmation must be set to "yes-really-destroy-data".
+    confirmation: ""
+    allowUninstallWithVolumes: true
+  removeOSDsIfOutAndSafeToRemove: true
+  storage:
+    useAllNodes: true
+    useAllDevices: true
+
+cephBlockPools:
+  - name: ceph-blockpool-hdd
+    spec:
+      deviceClass: hdd
+      failureDomain: osd
+      replicated:
+        size: 2
+      parameters:
+        compression_mode: none
+    storageClass:
+      enabled: true
+      name: ceph-block-hdd
+      isDefault: true
+      allowVolumeExpansion: true
+      reclaimPolicy: Delete
+      parameters:
+        imageFormat: "2"
+        imageFeatures: layering
+        csi.storage.k8s.io/provisioner-secret-namespace: rook-ceph
+        csi.storage.k8s.io/provisioner-secret-name: rook-csi-rbd-provisioner
+        csi.storage.k8s.io/controller-expand-secret-name: rook-csi-rbd-provisioner
+        csi.storage.k8s.io/controller-expand-secret-namespace: rook-ceph
+        csi.storage.k8s.io/node-stage-secret-name: rook-csi-rbd-node
+        csi.storage.k8s.io/node-stage-secret-namespace: rook-ceph
+        csi.storage.k8s.io/fstype: ext4
+#  - name: ceph-blockpool-ssd
+#    spec:
+#      deviceClass: ssd
+#      failureDomain: osd
+#      replicated:
+#        size: 2
+#      parameters:
+#        compression_mode: none
+#    storageClass:
+#      enabled: true
+#      name: ceph-block-ssd
+#      isDefault: false
+#      allowVolumeExpansion: true
+#      reclaimPolicy: Delete
+#      parameters:
+#        imageFormat: "2"
+#        imageFeatures: layering
+#        csi.storage.k8s.io/provisioner-secret-namespace: rook-ceph
+#        csi.storage.k8s.io/provisioner-secret-name: rook-csi-rbd-provisioner
+#        csi.storage.k8s.io/controller-expand-secret-name: rook-csi-rbd-provisioner
+#        csi.storage.k8s.io/controller-expand-secret-namespace: rook-ceph
+#        csi.storage.k8s.io/node-stage-secret-name: rook-csi-rbd-node
+#        csi.storage.k8s.io/node-stage-secret-namespace: rook-ceph
+#        csi.storage.k8s.io/fstype: ext4
+#  - name: ceph-blockpool-nvme
+#    spec:
+#      deviceClass: nvme
+#      failureDomain: osd
+#      replicated:
+#        size: 2
+#      parameters:
+#        compression_mode: none
+#    storageClass:
+#      enabled: true
+#      name: ceph-block-nvme
+#      isDefault: false
+#      allowVolumeExpansion: true
+#      reclaimPolicy: Delete
+#      parameters:
+#        imageFormat: "2"
+#        imageFeatures: layering
+#        csi.storage.k8s.io/provisioner-secret-namespace: rook-ceph
+#        csi.storage.k8s.io/provisioner-secret-name: rook-csi-rbd-provisioner
+#        csi.storage.k8s.io/controller-expand-secret-name: rook-csi-rbd-provisioner
+#        csi.storage.k8s.io/controller-expand-secret-namespace: rook-ceph
+#        csi.storage.k8s.io/node-stage-secret-name: rook-csi-rbd-node
+#        csi.storage.k8s.io/node-stage-secret-namespace: rook-ceph
+#        csi.storage.k8s.io/fstype: ext4
+
+cephFileSystems:
+  - name: ceph-filesystem-hdd
+    spec:
+      metadataPool:
+        deviceClass: hdd
+        failureDomain: osd
+        replicated:
+          size: 2
+      dataPools:
+        - deviceClass: hdd
+          failureDomain: osd
+          parameters:
+            compression_mode: none
+          replicated:
+            size: 2
+       # - deviceClass: hdd
+       #   failureDomain: host
+       #   parameters:
+       #     compression_mode: none
+       #   erasureCoded:
+       #     dataChunks: 2
+       #     codingChunks: 1
+      metadataServer:
+        activeCount: 1
+        activeStandby: true
+    storageClass:
+      enabled: true
+      name: ceph-filesystem-hdd
+      reclaimPolicy: Delete
+      parameters:
+        csi.storage.k8s.io/provisioner-secret-namespace: rook-ceph
+        csi.storage.k8s.io/controller-expand-secret-namespace: rook-ceph
+        csi.storage.k8s.io/provisioner-secret-name: rook-csi-cephfs-provisioner
+        csi.storage.k8s.io/controller-expand-secret-name: rook-csi-cephfs-provisioner
+        csi.storage.k8s.io/node-stage-secret-name: rook-csi-cephfs-node
+        csi.storage.k8s.io/node-stage-secret-namespace: rook-ceph
+        csi.storage.k8s.io/fstype: ext4
+#  - name: ceph-filesystem-ssd
+#    spec:
+#      metadataPool:
+#        deviceClass: ssd
+#        failureDomain: osd
+#        replicated:
+#          size: 2
+#      dataPools:
+#        - deviceClass: ssd
+#          failureDomain: osd
+#          parameters:
+#            compression_mode: none
+#          replicated:
+#            size: 2
+#       # - deviceClass: ssd
+#       #   failureDomain: host
+#       #   parameters:
+#       #     compression_mode: none
+#       #   erasureCoded:
+#       #     dataChunks: 2
+#       #     codingChunks: 1
+#      metadataServer:
+#        activeCount: 1
+#        activeStandby: true
+#    storageClass:
+#      enabled: true
+#      name: ceph-filesystem-ssd
+#      reclaimPolicy: Delete
+#      parameters:
+#        csi.storage.k8s.io/provisioner-secret-namespace: rook-ceph
+#        csi.storage.k8s.io/controller-expand-secret-namespace: rook-ceph
+#        csi.storage.k8s.io/provisioner-secret-name: rook-csi-cephfs-provisioner
+#        csi.storage.k8s.io/controller-expand-secret-name: rook-csi-cephfs-provisioner
+#        csi.storage.k8s.io/node-stage-secret-name: rook-csi-cephfs-node
+#        csi.storage.k8s.io/node-stage-secret-namespace: rook-ceph
+#        csi.storage.k8s.io/fstype: ext4
+#  - name: ceph-filesystem-nvme
+#    spec:
+#      metadataPool:
+#        deviceClass: nvme
+#        failureDomain: osd
+#        replicated:
+#          size: 2
+#      dataPools:
+#        - deviceClass: nvme
+#          failureDomain: osd
+#          parameters:
+#            compression_mode: none
+#          replicated:
+#            size: 2
+#       # - deviceClass: nvme
+#       #   failureDomain: host
+#       #   parameters:
+#       #     compression_mode: none
+#       #   erasureCoded:
+#       #     dataChunks: 2
+#       #     codingChunks: 1
+#      metadataServer:
+#        activeCount: 1
+#        activeStandby: true
+#    storageClass:
+#      enabled: true
+#      name: ceph-filesystem-nvme
+#      reclaimPolicy: Delete
+#      parameters:
+#        csi.storage.k8s.io/provisioner-secret-namespace: rook-ceph
+#        csi.storage.k8s.io/controller-expand-secret-namespace: rook-ceph
+#        csi.storage.k8s.io/provisioner-secret-name: rook-csi-cephfs-provisioner
+#        csi.storage.k8s.io/controller-expand-secret-name: rook-csi-cephfs-provisioner
+#        csi.storage.k8s.io/node-stage-secret-name: rook-csi-cephfs-node
+#        csi.storage.k8s.io/node-stage-secret-namespace: rook-ceph
+#        csi.storage.k8s.io/fstype: ext4
+#
+#cephObjectStores: []

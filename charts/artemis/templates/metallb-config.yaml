@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: metallb-subnet-pool
+data:
+  config: |
+    address-pools:
+    - name: default-addresses
+      protocol: layer2
+      addresses:
+      - 192.168.16.66-192.168.16.69

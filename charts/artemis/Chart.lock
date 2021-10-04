@@ -1,0 +1,15 @@
+dependencies:
+- name: argo-cd
+  repository: https://argoproj.github.io/argo-helm
+  version: 3.22.1
+- name: cert-manager
+  repository: https://charts.jetstack.io
+  version: v1.5.4
+- name: metallb
+  repository: https://metallb.github.io/metallb
+  version: 0.10.2
+- name: kong
+  repository: https://charts.konghq.com
+  version: 2.3.0
+digest: sha256:726678e1191d2c270298870f794b122b0315258b94a9721385e7c3239b756bef
+generated: "2021-10-03T20:52:53.125216896-07:00"

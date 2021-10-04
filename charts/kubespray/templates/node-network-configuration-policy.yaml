@@ -28,5 +28,5 @@ spec:
             enabled: false
         port:
         - name: {{ .Values.network.host_interface }}.{{ .Values.network.vlan_id }}
-  nodeSelector:
-    bridge.network.kubevirt.io/{{ .Values.network.host_interfaces }}: ""
+# nodeSelector:
+#   bridge.network.kubevirt.io/{{ .Values.network.host_interfaces }}: ""
