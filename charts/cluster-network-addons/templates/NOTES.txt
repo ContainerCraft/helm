@@ -1,1 +1,1 @@
-ContainerCraft.io Cluster Network Addons Helm Chart
+Network: Cluster Network Addons github.com/kubevirt/cluster-network-addons-operator

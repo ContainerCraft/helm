@@ -1,4 +1,4 @@
-ContainerCraft Artemis GitOps Platform
+GitOps: CCIO Artemis HomeLab Platform
 
 ABOUT:
   GitHub:

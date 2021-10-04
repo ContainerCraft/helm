@@ -1,1 +1,1 @@
-ContainerCraft Calypso Rook Ceph Distribution
+Storage: Rook Ceph HomeLab Chart
