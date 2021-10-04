@@ -1,11 +1,9 @@
 name: Release Charts
-
 on:
   push:
     tags: 'chart.*'
     branches:
       - releases
-
 jobs:
   release:
     runs-on: ubuntu-latest
@@ -24,6 +22,15 @@ jobs:
         run: |
           git config user.name "usrbinkat"
           git config user.email "usrbinkat@braincraft.io"
+
+      - name: Add dependency helm repos
+        run: |
+          helm repo add rook-release https://charts.rook.io/release
+          helm repo add argo https://argoproj.github.io/argo-helm
+          helm repo add metallb https://metallb.github.io/metallb
+          helm repo add jetstack https://charts.jetstack.io
+          helm repo add kong https://charts.konghq.com
+          helm repo update
 
       - name: Run chart-releaser
         uses: helm/chart-releaser-action@v1.2.1
