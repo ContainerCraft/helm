@@ -18,12 +18,12 @@
 - name: '{{ plugin.name }} | cluster-network-addons | Template Custom Config - Release {{ network_additions_release.tag }}'
   template:
     src: 'network-addons-config.cr.yml.j2'
-    dest: '{{ import.network_addons.dest }}/{{ import.network_addons.config }}'
+    dest: '{{ import.network_addons.dest }}/templates/{{ import.network_addons.config }}'
 
 - name: '{{ plugin.name }} | cluster-network-addons | Build Manifests - Release {{ network_additions_release.tag }}'
   get_url:
     url: '{{ import.network_addons.url }}/{{ release }}/{{ item }}'
-    dest: '{{ import.network_addons.dest }}/network-addons-operator.yaml'
+    dest: '{{ import.network_addons.dest }}/templates/operator.yaml'
   vars:
     release: '{{ network_additions_release.tag }}'
   with_items:
@@ -32,7 +32,7 @@
 - name: '{{ plugin.name }} | cluster-network-addons | Build Manifests - Release {{ network_additions_release.tag }}'
   get_url:
     url: '{{ import.network_addons.url }}/{{ release }}/{{ item }}'
-    dest: '{{ import.network_addons.dest }}'
+    dest: '{{ import.network_addons.dest }}/crds'
   vars:
     release: '{{ network_additions_release.tag }}'
   with_items:

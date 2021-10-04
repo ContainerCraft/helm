@@ -1,0 +1,12 @@
+Hostpath Provisioner uses node filesystem path /var/hpvolumes for pv storage
+
+ABOUT:
+  Github: 
+  - https://github.com/kubevirt/hostpath-provisioner
+  - https://github.com/kubevirt/hostpath-provisioner-operator
+  Examples:
+  - https://github.com/kubevirt/hostpath-provisioner/tree/main/examples
+
+Check status of deployment:
+  ~$ kubectl get po -n hostpath-provisioner
+  ~$ kubectl get sc

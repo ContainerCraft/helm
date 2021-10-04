@@ -8,8 +8,8 @@
 - name: "{{ plugin.name }} | fetch-cluster-network-addons.yml"
   include_tasks: fetch-cluster-network-addons.yml
 
-- name: "{{ plugin.name }} | fetch-hostpath-provisioner-operator.yml"
-  include_tasks: fetch-hostpath-provisioner-operator.yml
+# name: "{{ plugin.name }} | fetch-hostpath-provisioner-operator.yml"
+# include_tasks: fetch-hostpath-provisioner-operator.yml
 
 - name: "{{ plugin.name }} | fetch-containerized-data-importer.yml"
   include_tasks: fetch-containerized-data-importer.yml

@@ -15,5 +15,15 @@
     dest: '{{ import.kubevirt.dest }}'
     release: '{{ kubevirt_release.tag }}'
   with_items:
-    - '{{ import.kubevirt.operator }}' 
     - '{{ import.kubevirt.cr }}' 
+
+- name: "{{ plugin.name }} | kubevirt | Build Manifests - Release {{ kubevirt_release.tag }}"
+  get_url:
+    url: '{{ url }}/{{ release }}/{{ item }}'
+    dest: '{{ dest }}'
+  vars:
+    url: '{{ import.kubevirt.url }}'
+    dest: '{{ import.kubevirt.dest }}/crds/kubevirt-operator.yaml'
+    release: '{{ kubevirt_release.tag }}'
+  with_items:
+    - '{{ import.kubevirt.operator }}' 

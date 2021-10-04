@@ -6,33 +6,33 @@ run_path: .
 dir:
   tmp: '/tmp/kargo'
   root: '{{ run_path }}'
-  source: '{{ run_path }}/charts/kargo/templates'
+  source: '{{ run_path }}/charts'
   release: '{{ run_path }}/release'
 import:
   network_addons:
     operator: 'operator.yaml'
     crd: 'network-addons-config.crd.yaml'
     config: 'network-addons-config-example.cr.yaml'
-    dest: '{{ dir.source }}'
+    dest: '{{ dir.source }}/cluster-network-addons'
     url: 'https://github.com/kubevirt/cluster-network-addons-operator/releases/download'
-  containerized_data_importer:
-    cr: 'cdi-cr.yaml'
-    operator: 'cdi-operator.yaml'
-    dest: '{{ dir.source }}'
-    url: 'https://github.com/kubevirt/containerized-data-importer/releases/download'
   hostpath_provisioner:
     cr: 'hostpathprovisioner_cr.yaml'
     operator: 'operator.yaml'
     storageclass: 'storageclass-wffc.yaml'
-    dest: '{{ dir.source }}'
+    dest: '{{ dir.source }}/hostpath-provisioner'
     url: 'https://github.com/kubevirt/hostpath-provisioner-operator/releases/download'
   meta:
     webhooks: 'deploy/webhooks.yaml'
     service_account: 'deploy/service_account.yaml'
     url: 'https://raw.githubusercontent.com/kubevirt/hyperconverged-cluster-operator'
-    dest: '{{ dir.source }}'
+    dest: '{{ dir.source }}/kargo'
   kubevirt:
     cr: 'kubevirt-cr.yaml'
     operator: 'kubevirt-operator.yaml'
-    dest: '{{ dir.source }}'
+    dest: '{{ dir.source }}/kargo'
     url: 'https://github.com/kubevirt/kubevirt/releases/download'
+  containerized_data_importer:
+    cr: 'cdi-cr.yaml'
+    operator: 'cdi-operator.yaml'
+    dest: '{{ dir.source }}/kargo'
+    url: 'https://github.com/kubevirt/containerized-data-importer/releases/download'

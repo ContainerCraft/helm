@@ -16,4 +16,14 @@
     release: '{{ containerized_data_importer_release.tag }}'
   with_items:
     - '{{ import.containerized_data_importer.cr }}' 
+
+- name: "{{ plugin.name }} | containerized-data-importer | Build Manifests - Release {{ containerized_data_importer_release.tag }}"
+  get_url:
+    dest: '{{ dest }}'
+    url: '{{ url }}/{{ release }}/{{ item }}'
+  vars:
+    url: '{{ import.containerized_data_importer.url }}'
+    dest: '{{ import.containerized_data_importer.dest }}/crds'
+    release: '{{ containerized_data_importer_release.tag }}'
+  with_items:
     - '{{ import.containerized_data_importer.operator }}' 
