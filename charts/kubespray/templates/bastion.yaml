@@ -129,17 +129,20 @@ spec:
               ignore_growroot_disabled: true
             package_upgrade: true
             packages:
-              - jq
-              - vim
-              - xrdp
-              - docker.io
-              - apache2-utils
-              - libvirt-clients
-              - gnome-tweak-tool
-              - python3 python3-pip
-              - ubuntu-desktop-minimal
+              - "jq"
+              - "vim"
+              - "xrdp"
+              - "python3"
+              - "docker.io"
+              - "python3-pip"
+              - "gnome-tweaks"
+              - "apache2-utils"
+              - "libvirt-clients"
+              - "ubuntu-desktop-minimal"
             runcmd:
               - "lxd init --auto"
-              - "apt-get remove apport -y"
               - "mkdir -p /home/{{ .Values.user.name }}/.kube"
               - "chown -R {{ .Values.user.name }}:{{ .Values.user.name }} /home/{{ .Values.user.name }}"
+              - "apt-get remove apport python3-apport python3-problem-report shim-signed apport-symptoms python3-systemd ansible -y --allow-remove-essential"
+              - "apt-get autoremove -y"
+              - "python3 -m pip install --upgrade pip ansible ansible-base cryptography jinja2 netaddr pbr jmespath ruamel.yaml ruamel.yaml.clib MarkupSafe"
