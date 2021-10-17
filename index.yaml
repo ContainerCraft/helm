@@ -150,6 +150,16 @@ entries:
   kargo:
   - apiVersion: v2
     appVersion: 1.16.0
+    created: "2021-10-17T18:55:25.320606113Z"
+    description: HomeLab KubeVirt Hyper Converged Kubernetes Native Hypervisor
+    digest: 1ab6e83b1446bb8b35f1bc233b999b6db6f4b5011854bf8a09a5f32e50f32d62
+    name: kargo
+    type: application
+    urls:
+    - https://github.com/ContainerCraft/helm/releases/download/kargo-0.0.3/kargo-0.0.3.tgz
+    version: 0.0.3
+  - apiVersion: v2
+    appVersion: 1.16.0
     created: "2021-10-04T22:41:48.189270674Z"
     description: HomeLab KubeVirt Hyper Converged Kubernetes Native Hypervisor
     digest: 93045fff39ab88f05cfdab6e0916958c4423d895bd9e48253a0a86c52a7effc8
@@ -243,6 +253,16 @@ entries:
   kubespray:
   - apiVersion: v2
     appVersion: 0.0.1
+    created: "2021-10-17T18:55:25.437737216Z"
+    description: CCIO Kargo Kubespray Cluster
+    digest: cf30621960a261fa1143970739c0cb00ac1af87b5712d132b74a9f4e9e810f7b
+    name: kubespray
+    type: application
+    urls:
+    - https://github.com/ContainerCraft/helm/releases/download/kubespray-0.0.3/kubespray-0.0.3.tgz
+    version: 0.0.3
+  - apiVersion: v2
+    appVersion: 0.0.1
     created: "2021-10-04T19:40:57.512902309Z"
     description: CCIO Kargo Kubespray Cluster
     digest: e2526786f423acfc8c17f519c7fd02d065658a08718a285f626bd3a9b5810880
@@ -261,4 +281,4 @@ entries:
     urls:
     - https://github.com/ContainerCraft/helm/releases/download/kubespray-0.0.1/kubespray-0.0.1.tgz
     version: 0.0.1
-generated: "2021-10-17T05:03:12.357205255Z"
+generated: "2021-10-17T18:55:25.437780019Z"
