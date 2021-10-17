@@ -2,5 +2,5 @@ apiVersion: v2
 name: kubespray
 description: CCIO Kargo Kubespray Cluster
 type: application
-version: 0.0.2
+version: 0.0.3
 appVersion: "0.0.1"
