@@ -1,9 +1,0 @@
-apiVersion: v1
-kind: Namespace
-metadata:
-  creationTimestamp: null
-  name: kubevirt-hyperconverged
-  annotations:
-    "helm.sh/resource-policy": keep
-status: {}
-spec: {}
