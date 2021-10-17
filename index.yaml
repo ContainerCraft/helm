@@ -56,6 +56,23 @@ entries:
   calypso:
   - apiVersion: v2
     appVersion: 1.16.0
+    created: "2021-10-17T05:03:12.357166355Z"
+    dependencies:
+    - name: rook-ceph
+      repository: https://charts.rook.io/release
+      version: v1.7.4
+    - name: rook-ceph-cluster
+      repository: https://charts.rook.io/release
+      version: v1.7.4
+    description: HomeLab Storage Platform - Rook Ceph Deployment
+    digest: 55782712f37157761c2d2ab43a61074ce2c08eecdbbdaa2c59ccd241a7769d39
+    name: calypso
+    type: application
+    urls:
+    - https://github.com/ContainerCraft/helm/releases/download/calypso-0.0.3/calypso-0.0.3.tgz
+    version: 0.0.3
+  - apiVersion: v2
+    appVersion: 1.16.0
     created: "2021-10-04T22:41:47.600351901Z"
     dependencies:
     - name: rook-ceph
@@ -244,4 +261,4 @@ entries:
     urls:
     - https://github.com/ContainerCraft/helm/releases/download/kubespray-0.0.1/kubespray-0.0.1.tgz
     version: 0.0.1
-generated: "2021-10-04T22:41:48.189305777Z"
+generated: "2021-10-17T05:03:12.357205255Z"
