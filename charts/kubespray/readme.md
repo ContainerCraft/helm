@@ -53,9 +53,9 @@ kubectl get vmi -nkargo -owide
 touch /tmp/kubeconfig
 docker run -it --rm \
     --volume /tmp/kubeconfig:/config:z \
-    --environment  KUBE_API_DNS="api.kubespray.home.arpa" \
-    --environment HOSTS="192.168.16.61 192.168.16.62 192.168.16.63" \
-    --environment VRRP_IP="192.168.16.60" \
+    -e KUBE_API_DNS="api.kubespray.home.arpa" \
+    -e HOSTS="192.168.16.61 192.168.16.62 192.168.16.63" \
+    -e VRRP_IP="192.168.16.60" \
   quay.io/containercraft/konductor:kubespray \
     --user usrbinkat \
     -e ansible_ssh_pass=changeme \
