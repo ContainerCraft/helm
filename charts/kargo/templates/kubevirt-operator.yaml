@@ -772,7 +772,7 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: kubevirt-operator
-
+  namespace: kargo
 ---
 apiVersion: apps/v1
 kind: Deployment

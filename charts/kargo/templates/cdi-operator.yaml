@@ -231,6 +231,7 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: cdi-operator
+  namespace: kargo
 ---
 apiVersion: v1
 kind: ServiceAccount
