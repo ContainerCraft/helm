@@ -149,6 +149,16 @@ entries:
     version: 0.0.1
   kargo:
   - apiVersion: v2
+    appVersion: v0.46.0
+    created: "2021-10-18T02:23:13.11278537Z"
+    description: HomeLab KubeVirt Hyper Converged Kubernetes Native Hypervisor
+    digest: 45ef8163cd7031d4299bc2af7deca9529cc4cd9a44d3f88fe21b2a558360ffa7
+    name: kargo
+    type: application
+    urls:
+    - https://github.com/ContainerCraft/helm/releases/download/kargo-0.0.5/kargo-0.0.5.tgz
+    version: 0.0.5
+  - apiVersion: v2
     appVersion: 1.16.0
     created: "2021-10-17T19:08:01.437817053Z"
     description: HomeLab KubeVirt Hyper Converged Kubernetes Native Hypervisor
@@ -291,4 +301,4 @@ entries:
     urls:
     - https://github.com/ContainerCraft/helm/releases/download/kubespray-0.0.1/kubespray-0.0.1.tgz
     version: 0.0.1
-generated: "2021-10-17T19:08:01.437866454Z"
+generated: "2021-10-18T02:23:13.11284357Z"
