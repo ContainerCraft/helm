@@ -1,5 +1,5 @@
 apiVersion: v2
-version: 0.0.8
+version: 0.0.9
 appVersion: "v0.46.0"
 name: kargo
 description: HomeLab KubeVirt Hyper Converged Kubernetes Native Hypervisor
