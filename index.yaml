@@ -129,6 +129,16 @@ entries:
   hostpath-provisioner:
   - apiVersion: v2
     appVersion: v0.9.0
+    created: "2021-10-18T03:55:52.27192947Z"
+    description: Kubevirt Hostpath Provisioner Operatore Helm Chart
+    digest: 3bec36159f9356ebf4ae8402bdee2b0dbc5b585fdbc668db2f71e9226e20ac2b
+    name: hostpath-provisioner
+    type: application
+    urls:
+    - https://github.com/ContainerCraft/helm/releases/download/hostpath-provisioner-0.0.3/hostpath-provisioner-0.0.3.tgz
+    version: 0.0.3
+  - apiVersion: v2
+    appVersion: v0.9.0
     created: "2021-10-04T22:41:47.989601392Z"
     description: Kubevirt Hostpath Provisioner Operatore Helm Chart
     digest: 6936c43f53e96ee7359e5d442e6d24c9a0e08680fe761356f794bea75209fe5f
@@ -148,6 +158,16 @@ entries:
     - https://github.com/ContainerCraft/helm/releases/download/hostpath-provisioner-0.0.1/hostpath-provisioner-0.0.1.tgz
     version: 0.0.1
   kargo:
+  - apiVersion: v2
+    appVersion: v0.46.0
+    created: "2021-10-18T03:55:52.442473953Z"
+    description: HomeLab KubeVirt Hyper Converged Kubernetes Native Hypervisor
+    digest: def481e9122975326ebf6e914b3bd5b54b727976f7957e7751372f5920e42974
+    name: kargo
+    type: application
+    urls:
+    - https://github.com/ContainerCraft/helm/releases/download/kargo-0.0.7/kargo-0.0.7.tgz
+    version: 0.0.7
   - apiVersion: v2
     appVersion: v0.46.0
     created: "2021-10-18T03:09:49.060157165Z"
@@ -311,4 +331,4 @@ entries:
     urls:
     - https://github.com/ContainerCraft/helm/releases/download/kubespray-0.0.1/kubespray-0.0.1.tgz
     version: 0.0.1
-generated: "2021-10-18T03:09:49.060206768Z"
+generated: "2021-10-18T03:55:52.442624466Z"
