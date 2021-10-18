@@ -8,13 +8,13 @@ bridges:
     dhcp4: false
     dhcp6: false
     addresses:
-      - 192.168.16.62/24
-    gateway4: 192.168.16.1
+      - {{ .Values.network.node2.ipv4 }}
+    gateway4: {{ .Values.network.node2.ipv4 }}
     interfaces:
       - eth0
     nameservers:
       search:
-        - kubespray.home.arpa
+        - {{ .Values.network.search }}
       addresses:
-        - 192.168.16.1
+        - {{ .Values.network.node2.dns }}
     macaddress: "02:d2:76:00:00:20"

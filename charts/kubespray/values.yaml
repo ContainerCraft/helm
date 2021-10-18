@@ -12,8 +12,36 @@ podAnnotations: {}
 
 network:
   vlan_id: 101
+  subnet_mask: 24
   host_interface: br0
   primary: kargo-net-attach-def-br0
+  search: kubespray.home.arpa
+  metallb:
+    ingress1:
+      ipv4: 192.168.16.66
+  vrrp:
+    ipv4: 192.168.1.60
+  vyos:
+    eth1:
+      ipv4: "192.168.16.1"
+    dns1: 192.168.1.1
+    dns2: 8.8.8.8
+  bastion:
+    dns: 192.168.16.1
+    gateway: 192.168.16.1
+    ipv4: "192.168.16.12"
+  node1:
+    dns: 192.168.16.1
+    gateway: 192.168.16.1
+    ipv4: "192.168.16.61"
+  node2:
+    dns: 192.168.16.1
+    gateway: 192.168.16.1
+    ipv4: "192.168.16.62"
+  node3:
+    dns: 192.168.16.1
+    gateway: 192.168.16.1
+    ipv4: "192.168.16.63"
 
 user:
   name: usrbinkat

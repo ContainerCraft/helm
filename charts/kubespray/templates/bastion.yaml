@@ -101,13 +101,13 @@ spec:
                 dhcp4: false
                 dhcp6: false
                 addresses:
-                  - 192.168.16.12/24
-                gateway4: 192.168.16.1
+                  - {{ .Values.network.bastion.ipv4 }}
+                gateway4: {{ .Values.network.bastion.gateway }}
                 nameservers:
                   addresses:
-                  - 192.168.16.1
+                  - {{ .Values.network.bastion.dns }}
                   search:
-                  - kubespray.home.arpa
+                  - {{ .Values.network.search }}
           userData: |
             #cloud-config
             ssh_pwauth: true

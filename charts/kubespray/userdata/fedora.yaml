@@ -7,11 +7,6 @@ write_files:
   path: /etc/dnf/dnf.conf
   permissions: '0644'
   owner: root:root
-#- encoding: b64
-#  content: {{ tpl (.Files.Get "userdata/resolved.conf") . | b64enc }}
-#  path: /etc/systemd/resolved.conf
-#  permissions: '0644'
-#  owner: root:root
 chpasswd:
   expire: False
   list: |
@@ -24,12 +19,6 @@ users:
     lock_passwd: false
     ssh-authorized-keys:
       - {{ .Values.user.credentials.sshpubkey }}
-#power_state:
-#  mode: reboot
-#  delay: "now"
-#  timeout: 60
-#  condition: True
-#  message: "Going down for a reboot"
 growpart:
   mode: auto
   devices: ['/']
@@ -47,7 +36,8 @@ fs_setup:
     filesystem: 'ext4'
 mounts:
  - [ vdb, /var/lib/etcd, "ext4", "defaults", "1", "1"  ]
-#package_upgrade: true
+final_message: "The system is up after $UPTIME seconds"
+package_upgrade: true
 #packages:
 #  - vim
 #  - git
@@ -72,6 +62,11 @@ mounts:
 #  - openvswitch-devel
 #  - NetworkManager-tui
 #  - NetworkManager-ovs
-runcmd:
-  - "echo 'runcmd>> nocmd'"
-final_message: "The system is up after $UPTIME seconds"
+#runcmd:
+#  - "echo 'runcmd>> nocmd'"
+#power_state:
+#  mode: reboot
+#  delay: "now"
+#  timeout: 60
+#  condition: True
+#  message: "Going down for a reboot"
