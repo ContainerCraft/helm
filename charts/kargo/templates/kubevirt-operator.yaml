@@ -1,4 +1,12 @@
 ---
+apiVersion: scheduling.k8s.io/v1
+kind: PriorityClass
+metadata:
+  name: kubevirt-cluster-critical
+value: 1000000000
+globalDefault: false
+description: "This priority class should be used for core kubevirt components only."
+---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
@@ -27,7 +35,6 @@ metadata:
   labels:
     kubevirt.io: ""
   name: kubevirt-operator
-  namespace: kubevirt
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
@@ -35,7 +42,6 @@ metadata:
   labels:
     kubevirt.io: ""
   name: kubevirt-operator
-  namespace: kubevirt
 rules:
 - apiGroups:
   - ""
@@ -66,7 +72,6 @@ metadata:
   labels:
     kubevirt.io: ""
   name: kubevirt-operator-rolebinding
-  namespace: kubevirt
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -74,7 +79,6 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: kubevirt-operator
-  namespace: kubevirt
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -83,14 +87,6 @@ metadata:
     kubevirt.io: ""
   name: kubevirt-operator
 rules:
-- apiGroups:
-  - ""
-  resources:
-  - secrets
-  verbs:
-  - create
-  - get
-  - update
 - apiGroups:
   - kubevirt.io
   resources:
@@ -253,14 +249,6 @@ rules:
   - delete
   - update
   - patch
-- apiGroups:
-  - subresources.kubevirt.io
-  resources:
-  - virtualmachines/start
-  - virtualmachines/stop
-  - virtualmachines/restart
-  verbs:
-  - put
 - apiGroups:
   - subresources.kubevirt.io
   resources:
@@ -784,7 +772,6 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: kubevirt-operator
-  namespace: kubevirt
 
 ---
 apiVersion: apps/v1
@@ -793,7 +780,6 @@ metadata:
   labels:
     kubevirt.io: virt-operator
   name: virt-operator
-  namespace: kubevirt
 spec:
   replicas: 2
   selector:
@@ -831,12 +817,12 @@ spec:
         - "2"
         env:
         - name: OPERATOR_IMAGE
-          value: quay.io/kubevirt/virt-operator:v0.45.0
+          value: quay.io/kubevirt/virt-operator:v0.46.0
         - name: WATCH_NAMESPACE
           valueFrom:
             fieldRef:
               fieldPath: metadata.annotations['olm.targetNamespaces']
-        image: quay.io/kubevirt/virt-operator:v0.45.0
+        image: quay.io/kubevirt/virt-operator:v0.46.0
         imagePullPolicy: IfNotPresent
         name: virt-operator
         ports:
@@ -861,6 +847,8 @@ spec:
         - mountPath: /etc/virt-operator/certificates
           name: kubevirt-operator-certs
           readOnly: true
+        - mountPath: /profile-data
+          name: profile-data
       priorityClassName: kubevirt-cluster-critical
       securityContext:
         runAsNonRoot: true
@@ -873,3 +861,5 @@ spec:
         secret:
           optional: true
           secretName: kubevirt-operator-certs
+      - emptyDir: {}
+        name: profile-data

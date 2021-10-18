@@ -1,0 +1,21 @@
+---
+- name: "{{ plugin.name }} | cert-manager | Lookup Release"
+  github_release:
+    repo: cert-manager
+    user: jetstack
+    action: latest_release
+  register: cert_manager_release
+
+- name: "{{ plugin.name }} | cert-manager | Build Manifests - Release {{ cert_manager_release.tag }}"
+  get_url:
+    url: '{{ url }}/{{ release }}/{{ item }}'
+    dest: '{{ dest }}'
+  vars:
+    url: '{{ import.cert_manager.url }}'
+    dest: '{{ import.cert_manager.dest }}'
+    release: '{{ cert_manager_release.tag }}'
+   #release: 'master'
+  with_items:
+    - '{{ import.cert_manager.operator }}' 
+    - '{{ import.cert_manager.cr }}' 
+
