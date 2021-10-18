@@ -10,3 +10,6 @@ ABOUT:
 Check status of deployment:
   ~$ kubectl get po -n hostpath-provisioner
   ~$ kubectl get sc
+
+Optional - Set default Storage Class:
+  ~$ kubectl patch storageclass hostpath-provisioner -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
