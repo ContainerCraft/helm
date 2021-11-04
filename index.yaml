@@ -108,6 +108,16 @@ entries:
   cluster-network-addons:
   - apiVersion: v2
     appVersion: v0.58.2
+    created: "2021-11-04T21:58:15.210637436Z"
+    description: Kubevirt Cluster Network Addons Operator
+    digest: e530221f3039379faaf375ba8c19f92200499a0271102b2913f855ebe1693e92
+    name: cluster-network-addons
+    type: application
+    urls:
+    - https://github.com/ContainerCraft/helm/releases/download/cluster-network-addons-0.0.3/cluster-network-addons-0.0.3.tgz
+    version: 0.0.3
+  - apiVersion: v2
+    appVersion: v0.58.2
     created: "2021-10-04T22:41:47.795508637Z"
     description: Kubevirt Cluster Network Addons Operator
     digest: 6be59489db037646e1b0683f0db0e7ec40f4047e60a7eb87eb90b44efe5c728d
@@ -158,6 +168,16 @@ entries:
     - https://github.com/ContainerCraft/helm/releases/download/hostpath-provisioner-0.0.1/hostpath-provisioner-0.0.1.tgz
     version: 0.0.1
   kargo:
+  - apiVersion: v2
+    appVersion: v0.46.1
+    created: "2021-11-04T21:58:15.354875031Z"
+    description: HomeLab KubeVirt Hyper Converged Kubernetes Native Hypervisor
+    digest: eda7161d89d095ab2dd35bb153672961caddf4b80f0937ed0436ea757e6feb3d
+    name: kargo
+    type: application
+    urls:
+    - https://github.com/ContainerCraft/helm/releases/download/kargo-0.0.10/kargo-0.0.10.tgz
+    version: 0.0.10
   - apiVersion: v2
     appVersion: v0.46.0
     created: "2021-10-18T05:44:55.723123898Z"
@@ -289,6 +309,17 @@ entries:
     urls:
     - https://github.com/ContainerCraft/helm/releases/download/kargo-vpc-0.0.2/kargo-vpc-0.0.2.tgz
     version: 0.0.2
+  kc2:
+  - apiVersion: v2
+    appVersion: v21.10
+    created: "2021-11-04T21:58:15.498297316Z"
+    description: Kubevirt Compute Instances
+    digest: e7088c1b3fe04a91076e44142bb393d8f04f6cb9dcd5bb9f57dbb5891b374808
+    name: kc2
+    type: application
+    urls:
+    - https://github.com/ContainerCraft/helm/releases/download/kc2-0.0.1/kc2-0.0.1.tgz
+    version: 0.0.1
   konductor:
   - apiVersion: v2
     appVersion: 0.0.3
@@ -323,6 +354,16 @@ entries:
   kubespray:
   - apiVersion: v2
     appVersion: 0.0.1
+    created: "2021-11-04T21:58:15.622238273Z"
+    description: CCIO Kargo Kubespray Cluster
+    digest: 95ea0a4f4945d133e463104ea5c6d84e8cfe65ada816743d6e51ff9ff75863ef
+    name: kubespray
+    type: application
+    urls:
+    - https://github.com/ContainerCraft/helm/releases/download/kubespray-0.0.5/kubespray-0.0.5.tgz
+    version: 0.0.5
+  - apiVersion: v2
+    appVersion: 0.0.1
     created: "2021-10-17T18:55:25.437737216Z"
     description: CCIO Kargo Kubespray Cluster
     digest: cf30621960a261fa1143970739c0cb00ac1af87b5712d132b74a9f4e9e810f7b
@@ -351,4 +392,4 @@ entries:
     urls:
     - https://github.com/ContainerCraft/helm/releases/download/kubespray-0.0.1/kubespray-0.0.1.tgz
     version: 0.0.1
-generated: "2021-10-18T05:44:55.723209899Z"
+generated: "2021-11-04T21:58:15.622377674Z"
