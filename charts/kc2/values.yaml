@@ -1,0 +1,119 @@
+# KC2 values.yaml
+# Git https://github.com/containercraft/helm charts/kc2
+
+userdata:
+  sshpubkeysecret: 'sshpubkey-kc2user'
+  username: 'kc2user'
+  password: 'changeme'
+
+network:
+  provider:
+    nad: kargo-net-attach-def-br0
+  private:
+    interface: br0
+    vlan: 101
+
+kc2:
+  instances:
+  - name: bastion
+    repository: "quay.io/containercraft"
+    pullPolicy: Always
+    image: "ubuntu"
+    tag: "21.10"
+    gateway: "192.168.1.1"
+    ipv4: "192.168.1.14"
+    dns: "192.168.1.1"
+    search: "home.arpa"
+    cpu: host-passthrough
+    memory: 8G
+    cores: 4
+    stateful: true 
+    disks:
+      - name: root
+        size: 64G
+        class: "ceph-filesystem-ssd"
+        accessModes: ReadWriteMany
+        volumeMode: Block
+        bootOrder: 1
+    annotations:
+      kubevirt.io/provisionOnNode: node1
+    nodeSelector:
+      kubernetes.io/hostname: node1
+    packages_pip: "pip ansible ansible-base cryptography jinja2 netaddr pbr jmespath ruamel.yaml ruamel.yaml.clib MarkupSafe"
+    packages_snap: "helm kubectl"
+    packages:
+      - jq
+      - vim
+      - python3
+      - docker.io
+      - python3-pip
+      - apache2-utils
+      - libvirt-clients
+      - ubuntu-desktop
+      - gnome-tweaks
+      - firefox
+      - xrdp
+      #zone.kc2.containercraft.io/all: ""
+    # - name: root
+    #   size: "64" # integer size in GB
+    #   class: "hostpath-provisioner"
+    #   accessModes: ReadWriteOnce
+    #   volumeMode: Block
+    #   bootOrder: 1
+# - name: node1 
+#   gateway: "192.168.16.1"
+#   ipv4: "192.168.16.61"
+#   dns: "192.168.16.1"
+#   cpu: host-passthrough
+#   repository: quay.io/containercraft
+#   pullPolicy: Always
+#   image: "fedora"
+#   tag: "34"
+#   memory: 8G
+#   cores: 4
+#   storage:
+#     - vda:
+#         size: "64G"
+#         class: "hostpath-provisioner"
+#         accessModes: ReadWriteOnce
+#         volumeMode: Block
+#     - vdb:
+#         size: "8G"
+#         class: "hostpath-provisioner"
+#         accessModes: ReadWriteOnce
+#         volumeMode: Block
+#     - vdc:
+#         size: "64G"
+#         class: "hostpath-provisioner"
+#         accessModes: ReadWriteOnce
+#         volumeMode: Block
+#     - vdd:
+#         size: "64G"
+#         class: "hostpath-provisioner"
+#         accessModes: ReadWriteOnce
+#         volumeMode: Block
+
+gateway:
+  enabled: false
+  vyos:
+    tag: "1.4-rolling"
+    pullPolicy: Always
+    repository: "quay.io/containercraft"
+    cpu: host-passthrough
+    dns1: 192.168.1.1
+    memory: 512M
+    image: vyos
+    cores: 2
+  subnets:
+    - search: kc2.home.arpa
+      ipv4: "192.168.16.1"
+      subnet_mask: 24
+
+affinity: {}
+tolerations: []
+imagePullSecrets: []
+podAnnotations: {}
+nodeSelector: {}
+annotations: {}
+nameOverride: ""
+annotations: {}

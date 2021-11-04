@@ -8,3 +8,13 @@ metadata:
     kubevirt.io: ""
 data:
   feature-gates: "LiveMigration"
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kubevirt-config
+  namespace: kargo
+  labels:
+    kubevirt.io: ""
+data:
+  feature-gates: "LiveMigration"

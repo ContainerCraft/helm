@@ -22,7 +22,6 @@ spec:
         {{- include "kubespray.labels" . | nindent 8 }}
     spec:
       nodeSelector:
-        kargo-zone.containercraft.io/d: ""
         node-role.kubernetes.io/kubevirt: ""
       terminationGracePeriodSeconds: 0
       domain:

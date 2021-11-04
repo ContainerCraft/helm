@@ -1,0 +1,26 @@
+# kubectl apply -f https://git.io/JEQvY
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kc2
+  namespace: argocd
+spec:
+  destination:
+    name: ''
+    namespace: kargo
+    server: 'https://kubernetes.default.svc'
+  source:
+    path: library/kargo
+    repoURL: 'https://github.com/ContainerCraft/qubo'
+    targetRevision: HEAD
+    kustomize:
+      namePrefix: kc2-
+  project: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - PruneLast=true
+      - CreateNamespace=true
+      - ApplyOutOfSyncOnly=true

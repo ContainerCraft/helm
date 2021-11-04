@@ -13,7 +13,7 @@ spec:
   - metadata:
       name: node1-pvc-vda
       annotations:
-        kubevirt.io/provisionOnNode: node4
+        kubevirt.io/provisionOnNode: node1
       labels:
         app: kubespray
     spec:
@@ -42,7 +42,7 @@ spec:
   - metadata:
       name: node1-pvc-vdb
       annotations:
-        kubevirt.io/provisionOnNode: node4
+        kubevirt.io/provisionOnNode: node1
       labels:
         app: kubespray
     spec:
@@ -68,7 +68,7 @@ spec:
   - metadata:
       name: node1-pvc-vdc
       annotations:
-        kubevirt.io/provisionOnNode: node4
+        kubevirt.io/provisionOnNode: node1
       labels:
         app: kubespray
     spec:
@@ -94,7 +94,7 @@ spec:
   - metadata:
       name: node1-pvc-vdd
       annotations:
-        kubevirt.io/provisionOnNode: node4
+        kubevirt.io/provisionOnNode: node1
       labels:
         app: kubespray
     spec:

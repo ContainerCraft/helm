@@ -40,9 +40,9 @@ spec:
         resources:
           requests:
             storage: 64G
-        storageClassName: "ceph-filesystem-ssd"
+        storageClassName: "hostpath-provisioner"
       persistentVolumeReclaimPolicy: Delete
-      storageClassName: "ceph-filesystem-ssd"
+      storageClassName: "hostpath-provisioner"
       volumeMode: Block
   template:
     spec:

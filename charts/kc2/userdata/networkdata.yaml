@@ -1,0 +1,13 @@
+version: 2
+ethernets:
+  enp1s0:
+    dhcp4: true
+    dhcp6: false
+    addresses: 
+      - {{ $kc2instances.ipv4 }}/24
+    gateway4: {{ $kc2instances.gateway }}
+    nameservers:
+      addresses:
+      - {{ $kc2instances.dns }}
+      search:
+      - {{ $kc2instances.search }}

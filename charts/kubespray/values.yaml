@@ -65,22 +65,22 @@ nodes:
     storage:
       vda:
         size: "64G"
-        class: "hostpath-provisioner"
+        class: "ceph-filesystem-ssd"
         accessModes: ReadWriteOnce
         volumeMode: Block
       vdb:
         size: "8G"
-        class: "hostpath-provisioner"
+        class: "ceph-filesystem-ssd"
         accessModes: ReadWriteOnce
         volumeMode: Block
       vdc:
         size: "64G"
-        class: "ceph-block-ssd"
+        class: "ceph-filesystem-ssd"
         accessModes: ReadWriteOnce
         volumeMode: Block
       vdd:
         size: "64G"
-        class: "ceph-block-ssd"
+        class: "ceph-filesystem-ssd"
         accessModes: ReadWriteOnce
         volumeMode: Block
 vyos:
@@ -112,12 +112,6 @@ bastion:
     tag: "21.10"
 
 securityContext: {}
-  #capabilities:
-  #  drop:
-  #  - ALL
-  #readOnlyRootFilesystem: true
-  #runAsNonRoot: true
-  #runAsUser: 1000
 serviceAccount:
   create: false
   annotations: {}

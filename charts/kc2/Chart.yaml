@@ -1,0 +1,6 @@
+apiVersion: v2
+version: 0.0.1
+appVersion: "v21.10"
+name: kc2
+description: Kubevirt Compute Instances
+type: application

@@ -1,0 +1,145 @@
+{{- $instancename := "kc2.fullname" }}
+{{- $networkname := "kc2.networkname" }}
+{{- $sshPubKey := "userdata.credentials.sshpubkey" -}}
+{{- $sshUserName := "userdata.credentials.username" -}}
+{{- $userdatasecret := "userdata.credentials.secret" -}}
+{{- $secret := (lookup "v1" "Secret" .Release.Namespace "$userdatasecret") }}
+{{- if $secret }}
+{{- $sshPubKey = index $secret.data "sshpubkey" }}
+{{- end -}}
+{{/*
+{{- if $secret }}
+{{- $sshUserName = index $secret.data "username" }}
+{{- end -}}
+*/}}
+{{- range $kc2instances := .Values.kc2.instances }}
+apiVersion: kubevirt.io/v1
+kind: VirtualMachine
+metadata:
+  name: {{ $kc2instances.name }}
+labels:
+  app: {{ quote ($instancename) . }}
+spec:
+  running: true
+{{- if $kc2instances.disks }}
+  dataVolumeTemplates:
+{{- range $disks := $kc2instances.disks }}
+    - metadata:
+        # name: node1-pvc-vda
+        name: {{ $instancename }}{{ $disks.name }}{{ $disks.size }}
+        annotations:
+          _: ''
+        labels:
+          app: {{ $instancename }}
+      spec:
+        source:
+          registry:
+            tag: {{ $kc2instances.tag }}
+            url: "docker://{{ $kc2instances.repository }}/{{ $kc2instances.image }}"
+            imagePullPolicy: {{ $kc2instances.pullPolicy }}
+        accessModes:
+        - "{{ $disks.accessModes }}"
+        capacity:
+          storage: "{{ $disks.size }}"
+        config:
+          featureGates:
+          - HonorWaitForFirstConsumer
+        pvc:
+          accessModes:
+          - "{{ $disks.accessModes }}"
+          resources:
+            requests:
+              storage: "{{ $disks.size }}"
+          storageClassName: "{{ $disks.class }}"
+        storageClassName: "{{ $disks.class }}"
+        volumeMode: "{{ $disks.volumeMode }}"
+        persistentVolumeReclaimPolicy: Delete
+{{- end }}
+  template:
+    spec:
+      evictionStrategy: LiveMigrate
+      nodeSelector:
+        _: ''
+      domain:
+        clock:
+          timer: {}
+          utc: {}
+        cpu:
+          model: {{ $kc2instances.cpu }}
+          threads: {{ $kc2instances.cores }}
+          dedicatedCpuPlacement: false
+          sockets: 1
+          cores: 1
+        resources:
+          requests:
+            memory: {{ $kc2instances.memory }}
+            devices.kubevirt.io/kvm: "1"
+          limits:
+            memory: {{ $kc2instances.memory }}
+        machine:
+          type: pc-q35-rhel8.4.0
+        devices:
+          autoattachPodInterface: false
+          autoattachSerialConsole: true
+          autoattachGraphicsDevice: true
+          networkInterfaceMultiqueue: true
+          rng: {}
+          disks:
+            - name: node1-disk-vda
+              bootOrder: 1
+              disk:
+                bus: virtio
+            - name: node1-disk-vdb
+              disk:
+                bus: virtio
+            - name: node1-disk-vdc
+              disk:
+                bus: virtio
+            - name: node1-disk-vdd
+              disk:
+                bus: virtio
+            - name: cloudinitdisk
+              disk:
+                bus: virtio
+          interfaces:
+          - name: eth0
+            model: virtio
+            macAddress: 02:d1:76:00:00:20
+            bridge: {}
+      hostname: node1
+      networks:
+      - name: eth0
+        multus:
+          networkName: {{ quote ($networkname) . }}
+      terminationGracePeriodSeconds: 0
+{{- end }}
+      accessCredentials:
+      - sshPublicKey:
+          source:
+            secret:
+              secretName: {{ $sshPubKey }}
+          propagationMethod:
+            qemuGuestAgent:
+              users:
+              - {{ $sshUserName }}
+      volumes:
+        - name: node1-disk-vda
+          dataVolume:
+            name: node1-pvc-vda
+        - name: node1-disk-vdb
+          dataVolume:
+            name: node1-pvc-vdb
+        - name: node1-disk-vdc
+          dataVolume:
+            name: node1-pvc-vdc
+        - name: node1-disk-vdd
+          dataVolume:
+            name: node1-pvc-vdd
+        - name: cloudinitdisk
+          cloudInitNoCloud:
+            secretRef:
+              name: fedora-cloudinit-userdata
+            networkDataSecretRef:
+              name: node1-cloudinit-networkdata
+---
+{{- end }}

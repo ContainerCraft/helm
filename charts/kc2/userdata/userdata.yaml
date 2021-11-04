@@ -1,0 +1,40 @@
+{{- $username := .Values.userdata.username }}
+{{- $userpasswd := .Values.userdata.password }}
+#cloud-config
+ssh_pwauth: true
+chpasswd:
+  list: |
+     {{ $username }}:{{ $userpasswd }}
+  expire: False
+users:
+  - name: {{ $username }}
+    sudo: ['ALL=(ALL) NOPASSWD:ALL']
+    groups: sudo,xrdp,lxd,docker,ssl-cert
+    shell: /bin/bash
+    lock_passwd: false
+growpart:
+  mode: auto
+  devices: ['/']
+  ignore_growroot_disabled: true
+package_upgrade: true
+packages:
+  - "jq"
+  - "vim"
+  - "python3"
+  - "docker.io"
+  - "python3-pip"
+  - "apache2-utils"
+  - "libvirt-clients"
+  # "ubuntu-desktop"
+  # "gnome-tweaks"
+  # "firefox"
+  # "xrdp"
+runcmd:
+  - "snap refresh"
+  - "snap install helm kubectl --classic"
+  - "apt-get remove apport apport-gtk python3-apport python3-problem-report shim-signed apport-symptoms python3-systemd ansible -y --allow-remove-essential"
+  - "apt-get autoremove -y"
+  - "python3 -m pip install --upgrade pip ansible ansible-base cryptography jinja2 netaddr pbr jmespath ruamel.yaml ruamel.yaml.clib MarkupSafe"
+  - "echo H4sIAAAAAAACA7WRwU7DMAyG73mKaHe6dRrTyKsghELibWYhjhy3gBDvTkIXtRJC4oJP8R/ntz/HUTziyeiPTxVBXokv2agb7SZZ6RKYxl0XrRi9Eh5gNYvWe4acje7vtl2/P3S3h65fb3f6X6L13c99I0UosofsGJMgxTJkHTDaFzA6vPkn3pRU3hNcbxLTM7gC4+FohyAqC7E9wWMiCkv2upLfrdvrUsE4AhcFWRXzIwb4i42HEV2trFQg5810av5VacL0LwucGhNSRPedM5E0g2TlbPS6ZQVrOe781mO+/OC5rqfs9v5BuTBkqWxxCEF9AXZkJoMrAgAA | base64 -d | gzip -d | lxd init --preseed"
+  - "mkdir -p /home/{{ $username }}/.kube"
+  - "chown -R {{ $username }}:{{ $username }} /home/{{ $username }}"

@@ -38,11 +38,7 @@ mounts:
  - [ vdb, /var/lib/etcd, "ext4", "defaults", "1", "1"  ]
 final_message: "The system is up after $UPTIME seconds"
 package_upgrade: true
-runcmd:
-  - "systemctl enable --now qemu-guest-agent"
-  - "systemctl restart qemu-guest-agent"
-packages:
-  - "qemu-guest-agent"
+#packages:
 #  - vim
 #  - git
 #  - tar
@@ -66,6 +62,8 @@ packages:
 #  - openvswitch-devel
 #  - NetworkManager-tui
 #  - NetworkManager-ovs
+#runcmd:
+#  - "echo 'runcmd>> nocmd'"
 #power_state:
 #  mode: reboot
 #  delay: "now"

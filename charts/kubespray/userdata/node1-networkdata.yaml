@@ -9,7 +9,7 @@ bridges:
     dhcp6: false
     addresses:
       - {{ .Values.network.node1.ipv4 }}
-    gateway4: {{ .Values.network.node1.ipv4 }}
+    gateway4: {{ .Values.network.vyos.eth1.ipv4 }}
     interfaces:
       - eth0
     nameservers:

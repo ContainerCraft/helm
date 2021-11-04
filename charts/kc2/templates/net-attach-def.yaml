@@ -1,0 +1,27 @@
+{{/*
+{{- $networkname := print "kc2" .Values.network.private.interface "vlanid" .Values.network.private.vlan -}}
+{{- $networkiface := print "kc2" .Values.network.private.interface "." .Values.network.private.vlan -}}
+apiVersion: k8s.cni.cncf.io/v1
+kind: NetworkAttachmentDefinition
+metadata:
+  name: {{ $networkname }}
+  labels:
+    containercraft.io/project: "kc2"
+    app: {{ .Release.Name }}
+spec:
+  config: |
+      {
+          "cniVersion": "1.0.0",
+          "name": {{ $networkname }},
+          "plugins": [
+              {
+                  "type": "bridge",
+                  "bridge": "{{ $networkiface }}",
+                  "ipam": {}
+              },
+              {
+                  "type": "tuning"
+              }
+          ]
+      }
+*/}}

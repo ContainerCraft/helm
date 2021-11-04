@@ -1,0 +1,159 @@
+{{- $appname := print "kc2-" .Release.Name -}}
+{{- $username := .Values.userdata.username }}
+{{- $userpasswd := .Values.userdata.password }}
+{{- $networkname := .Values.network.provider.nad }}
+{{- $userdatasecret := .Values.userdata.secret -}}
+{{- $sshPubKeySecret := .Values.userdata.sshpubkeysecret -}}
+{{- $basepath := .Template.Basepath -}}
+{{- $userdatapath := (print $basepath "userdata/userdata.yaml") }}
+{{- $networkdatapath := (print $basepath "userdata/networkdata.yaml") }}
+{{/*- $secret := (lookup "v1" "Secret" .Release.Namespace $userdatasecret) */}}
+
+{{- range $kc2instances := .Values.kc2.instances }}
+apiVersion: kubevirt.io/v1alpha3
+kind: VirtualMachine
+metadata:
+  name: {{ print $appname "-" $kc2instances.name }}
+  labels:
+    app: {{ print "kc2-" $.Release.Name }} 
+    kubevirt.io/os: linux
+    containercraft.io/project: "kc2"
+spec:
+  running: true
+  {{- if $kc2instances.disks }}
+  dataVolumeTemplates:
+    {{- range $disks := $kc2instances.disks }}
+    - metadata:
+        name: {{ print $appname "-" $kc2instances.name "-volume-" $disks.name "-" $disks.size | lower }}
+        labels:
+          app: {{ print $appname "-" $kc2instances.name }}
+      spec:
+        source:
+          registry:
+            tag: {{ $kc2instances.tag }}
+            url: "docker://{{ $kc2instances.repository }}/{{ $kc2instances.image }}:{{ $kc2instances.tag }}"
+            imagePullPolicy: {{ $kc2instances.pullPolicy }}
+        accessModes:
+        - {{ $disks.accessModes | quote }}
+        capacity:
+          storage: {{ $disks.size | quote }}
+        config:
+          featureGates:
+          - HonorWaitForFirstConsumer
+        pvc:
+          accessModes:
+          - "{{ $disks.accessModes }}"
+          resources:
+            requests:
+              storage: "{{ print $disks.size }}"
+            limits:
+              storage: "{{ print $disks.size }}"
+          storageClassName: "{{ $disks.class }}"
+        storageClassName: "{{ $disks.class }}"
+        persistentVolumeReclaimPolicy: Delete
+        volumeMode: "{{ $disks.volumeMode }}"
+      {{- if $kc2instances.annotations }}
+        annotations:
+        {{- range $key, $value := $kc2instances.annotations }}
+          {{ $key }}: {{ $value | quote }}
+        {{- end }}
+        {{- range $key, $value := $.Values.annotations }}
+          {{ $key }}: {{ $value | quote }}
+        {{- end }}
+      {{- end -}}
+    {{- end -}}
+  {{- end }}
+  template:
+    spec:
+      evictionStrategy: LiveMigrate
+      domain:
+        clock:
+          timer: {}
+          utc: {}
+        cpu:
+          model: {{ $kc2instances.cpu }}
+          threads: {{ $kc2instances.cores }}
+          dedicatedCpuPlacement: false
+          sockets: 1
+          cores: 1
+        resources:
+          requests:
+            devices.kubevirt.io/kvm: "1"
+            memory: {{ $kc2instances.memory }}
+          limits:
+            memory: {{ $kc2instances.memory }}
+        machine:
+          type: "pc-q35-rhel8.4.0"
+        devices:
+          autoattachPodInterface: false
+          autoattachSerialConsole: true
+          autoattachGraphicsDevice: true
+          networkInterfaceMultiqueue: true
+          rng: {}
+          disks:
+          {{- if $kc2instances.disks }}
+          {{- range $disks := $kc2instances.disks }}
+          - name: {{ print $appname "-" $kc2instances.name "-disk-" $disks.name "-" $disks.size | lower }}
+            bootOrder: {{ $disks.bootOrder }}
+            disk:
+              bus: virtio
+          {{- end }}
+          {{- end }}
+          - name: cloudinitdisk
+            disk:
+              bus: virtio
+          interfaces:
+          - name: enp1s0
+            model: virtio
+            bootOrder: 2
+            bridge: {}
+      hostname: {{ $kc2instances.name }}
+      networks:
+      - name: enp1s0
+        multus:
+          networkName: {{ $networkname }}
+      terminationGracePeriodSeconds: 0
+      accessCredentials:
+      - sshPublicKey:
+          source:
+            secret:
+              secretName: {{ $sshPubKeySecret }}
+          propagationMethod:
+            qemuGuestAgent:
+              users:
+              - {{ $username }}
+      volumes:
+      {{- if $kc2instances.disks }}
+      {{- range $disks := $kc2instances.disks }}
+      - name: {{ print $appname "-" $kc2instances.name "-disk-" $disks.name "-" $disks.size | lower }}
+        dataVolume:
+          name: {{ print $appname "-" $kc2instances.name "-volume-" $disks.name "-" $disks.size | lower }}
+      {{- end }}
+      {{- end }}
+      - name: cloudinitdisk
+        cloudInitNoCloud:
+          networkData: |
+            version: 2
+            ethernets:
+              enp1s0:
+                dhcp4: false
+                dhcp6: false
+                addresses: 
+                  - {{ $kc2instances.ipv4 }}/24
+                gateway4: {{ $kc2instances.gateway }}
+                nameservers:
+                  addresses:
+                  - {{ $kc2instances.dns }}
+                  search:
+                  - {{ $kc2instances.search }}
+          secretRef:
+            name: {{ print $appname "-" $kc2instances.name "-userdata" }}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ print $appname "-" $kc2instances.name "-userdata" }}
+data:
+  userdata: {{ tpl ( $.Files.Get "userdata/userdata.yaml") $ | b64enc }}
+---
+{{- end -}}
