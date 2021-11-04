@@ -34,6 +34,14 @@ kubectl create secret generic kubespray-${VMUSERNAME}-password \
     --from-literal=password='changeme' \
   | kubectl apply -f -
 ```
+  - label nodes
+```sh
+kubectl label nodes node1 node2 --overwrite kargo-zone.containercraft.io/a=''
+kubectl label nodes node2 node3 --overwrite kargo-zone.containercraft.io/b=''
+kubectl label nodes node1 node3 --overwrite kargo-zone.containercraft.io/c=''
+kubectl label nodes node1 node2 node3 --overwrite kargo-zone.containercraft.io/d=''
+kubectl label nodes --all --overwrite kargo-zone.containercraft.io/all=''
+```
   - Deploy vpc
 ```sh
 export NEW_VPC_NAME=voyager
