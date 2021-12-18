@@ -45,7 +45,7 @@ kubectl label nodes --all --overwrite kargo-zone.containercraft.io/all=''
   - Deploy vpc
 ```sh
 export NEW_VPC_NAME=voyager
-helm install $NEW_VPC_NAME ccio/kubespray --namespace kargo --set user.pass="changeme"
+helm upgrade --install $NEW_VPC_NAME ccio/kubespray --namespace kargo --set user.pass="changeme"
 ```
   - Connect to vm consoles
 ```sh
