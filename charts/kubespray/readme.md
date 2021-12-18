@@ -71,6 +71,6 @@ docker run -it --rm \
 ```
   - Add hostpath provisioner for storage
 ```sh
-helm install hostpath-provisioner ccio/hostpath-provisioner --namespace hostpath-provisioner --create-namespace
+helm upgrade --install hostpath-provisioner ccio/hostpath-provisioner --namespace hostpath-provisioner --create-namespace
 kubectl patch storageclass hostpath-provisioner -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}' 
 ```
