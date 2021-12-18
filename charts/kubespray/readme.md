@@ -20,7 +20,7 @@ helm repo update
 ```
   - Create ssh key secret
 ```sh
-export VMUSERNAME=$(whoami)
+export VMUSERNAME=kc2user
 kubectl create secret generic kubespray-${VMUSERNAME}-sshpubkey \
     --namespace kargo --dry-run=client -oyaml \
     --from-file=key1=$HOME/.ssh/id_rsa.pub \
@@ -28,26 +28,18 @@ kubectl create secret generic kubespray-${VMUSERNAME}-sshpubkey \
 ```
   - Create instance user login password 
 ```sh
-export VMUSERNAME=$(whoami)
+export VMUSERNAME=kc2user
 kubectl create secret generic kubespray-${VMUSERNAME}-password \
     --namespace kargo --dry-run=client -oyaml \
-    --from-literal=password='changeme' \
+    --from-literal=password='kc2user' \
   | kubectl apply -f -
-```
-  - label nodes
-```sh
-kubectl label nodes node1 node2 --overwrite kargo-zone.containercraft.io/a=''
-kubectl label nodes node2 node3 --overwrite kargo-zone.containercraft.io/b=''
-kubectl label nodes node1 node3 --overwrite kargo-zone.containercraft.io/c=''
-kubectl label nodes node1 node2 node3 --overwrite kargo-zone.containercraft.io/d=''
-kubectl label nodes --all --overwrite kargo-zone.containercraft.io/all=''
 ```
   - Deploy vpc
 ```sh
 export NEW_VPC_NAME=voyager
-helm upgrade --install $NEW_VPC_NAME ccio/kubespray --namespace kargo --set user.pass="changeme"
+helm upgrade --install $NEW_VPC_NAME ccio/kubespray --namespace kargo --set user.pass="kc2user"
 ```
-  - Connect to vm consoles
+  - [optional] Connect to vm consoles
 ```sh
 virtctl console -nkargo vyos-gateway-voyager-kubespray 
 virtctl console -nkargo bastion-voyager-kubespray 
@@ -61,13 +53,13 @@ kubectl get vmi -nkargo -owide
 touch /tmp/kubeconfig
 docker run -it --rm \
     --volume /tmp/kubeconfig:/config:z \
-    -e KUBE_API_DNS="api.kubespray.home.arpa" \
+    -e KUBE_API_DNS="api.overcloud.home.arpa" \
     -e HOSTS="192.168.16.61 192.168.16.62 192.168.16.63" \
     -e VRRP_IP="192.168.16.60" \
   quay.io/containercraft/konductor:kubespray \
-    --user usrbinkat \
-    -e ansible_ssh_pass=changeme \
-    -e ansible_sudo_pass=changeme
+    --user kc2user \
+    -e ansible_ssh_pass=kc2user \
+    -e ansible_sudo_pass=kc2user
 ```
   - Add hostpath provisioner for storage
 ```sh
