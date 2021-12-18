@@ -56,7 +56,7 @@ docker run -it --rm \
     -e KUBE_API_DNS="api.overcloud.home.arpa" \
     -e HOSTS="192.168.16.61 192.168.16.62 192.168.16.63" \
     -e VRRP_IP="192.168.16.60" \
-  quay.io/containercraft/konductor:kubespray \
+  quay.io/containercraft/konductor:kubespray -e crio_version="1.22" \
     --user kc2user \
     -e ansible_ssh_pass=kc2user \
     -e ansible_sudo_pass=kc2user
