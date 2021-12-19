@@ -5,6 +5,8 @@ ethernets:
     dhcp6: false
 bridges:
   br0:
+    max-age: 0
+    ageing-time: 0
     dhcp4: false
     dhcp6: false
     addresses:

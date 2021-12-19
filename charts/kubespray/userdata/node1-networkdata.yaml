@@ -5,6 +5,8 @@ ethernets:
     dhcp6: false
 bridges:
   br0:
+    max-age: 0
+    ageing-time: 0
     dhcp4: false
     dhcp6: false
     addresses:
@@ -17,4 +19,4 @@ bridges:
         - {{ .Values.network.search }}
       addresses:
         - {{ .Values.network.node1.dns }}
-    macaddress: "02:d1:76:00:00:20"
+#   macaddress: "02:d1:76:00:00:20"

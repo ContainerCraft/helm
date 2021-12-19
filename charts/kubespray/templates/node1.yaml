@@ -19,9 +19,8 @@ spec:
     spec:
       source:
         registry:
-          tag: {{ .Values.nodes.masters.source.tag }}
-          url: "docker://{{ .Values.nodes.masters.source.image }}"
-          imagePullPolicy: {{ .Values.nodes.masters.source.imagePullPolicy }}
+          url: "docker://{{ .Values.nodes.masters.source.image }}:{{ .Values.nodes.masters.source.tag }}"
+          imagePullPolicy: {{ .Values.nodes.imagePullPolicy }}
       accessModes:
       - "{{ .Values.nodes.masters.storage.vda.accessModes }}"
       capacity:
@@ -121,7 +120,7 @@ spec:
     spec:
       evictionStrategy: LiveMigrate
       nodeSelector:
-        kargo-zone.containercraft.io/d: ""
+        node-role.kubernetes.io/kubevirt: ""
       domain:
         clock:
           timer: {}
@@ -166,7 +165,7 @@ spec:
           interfaces:
           - name: eth0
             model: virtio
-            macAddress: 02:d1:76:00:00:20
+#           macAddress: 02:d1:76:00:00:20
             bridge: {}
       hostname: node1
       networks:
