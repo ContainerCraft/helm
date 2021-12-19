@@ -25,44 +25,48 @@ spec:
     spec:
       source:
         registry:
-          url: "docker://{{ .Values.bastion.image.repository }}:{{ .Values.bastion.image.tag }}"
-          imagePullPolicy: IfNotPresent
+          url: "docker://{{ .Values.nodes.bastion.source.image }}:{{ .Values.nodes.bastion.source.tag }}"
+          imagePullPolicy: {{ .Values.nodes.imagePullPolicy }}
       accessModes:
-      - ReadWriteOnce
+      - "{{ .Values.nodes.bastion.storage.vda.accessModes }}"
       capacity:
-        storage: 64G
+        storage: "{{ .Values.nodes.bastion.storage.vda.size }}"
       config:
         featureGates:
         - HonorWaitForFirstConsumer
       pvc:
         accessModes:
-        - ReadWriteOnce
+        - "{{ .Values.nodes.bastion.storage.vda.accessModes }}"
         resources:
           requests:
-            storage: 64G
-        storageClassName: "ceph-filesystem-ssd"
+            storage: "{{ .Values.nodes.bastion.storage.vda.size }}"
+        storageClassName: "{{ .Values.nodes.bastion.storage.vda.class }}"
+      storageClassName: "{{ .Values.nodes.bastion.storage.vda.class }}"
+      volumeMode: {{ .Values.nodes.bastion.storage.vda.volumeMode }}
       persistentVolumeReclaimPolicy: Delete
-      storageClassName: "ceph-filesystem-ssd"
-      volumeMode: Block
   template:
     spec:
       evictionStrategy: LiveMigrate
       nodeSelector:
-        kargo-zone.containercraft.io/d: ""
+        node-role.kubernetes.io/kubevirt: ""
       domain:
         clock:
           timer: {}
           utc: {}
         cpu:
-          model: {{ .Values.bastion.cpu.model }}
-          threads: {{ .Values.bastion.cpu.cores }}
+          model: {{ .Values.nodes.bastion.cpu.model }}
+          threads: {{ .Values.nodes.bastion.cpu.cores }}
           dedicatedCpuPlacement: false
           sockets: 1
           cores: 1
         resources:
-          {{- toYaml .Values.bastion.resources | nindent 10 }}
+          requests:
+            memory: {{ .Values.nodes.bastion.memory }}
+            devices.kubevirt.io/kvm: "1"
+          limits:
+            memory: {{ .Values.nodes.bastion.memory }}
         machine:
-          type: "pc-q35-rhel8.3.0"
+          type: "q35"
         devices:
           autoattachPodInterface: false
           autoattachSerialConsole: true
@@ -88,6 +92,15 @@ spec:
         multus:
           networkName: {{ include "kubespray.fullname" . }}.brvpc{{ .Values.network.host_interface }}.{{ .Values.network.vlan_id }}
       terminationGracePeriodSeconds: 0
+      accessCredentials:
+      - sshPublicKey:
+          source:
+            secret:
+              secretName: {{ .Values.user.credentials.sshpubkeysecret }}
+          propagationMethod:
+            qemuGuestAgent:
+              users:
+              - "{{ .Values.user.name }}"
       volumes:
       - name: bastion-disk-vda-root
         dataVolume:
@@ -120,8 +133,6 @@ spec:
                 sudo: ['ALL=(ALL) NOPASSWD:ALL']
                 groups: sudo,xrdp,lxd,docker,ssl-cert
                 shell: /bin/bash
-                ssh-authorized-keys:
-                  - {{ .Values.user.credentials.sshpubkey }}
             hostname: bastion-{{ include "kubespray.fullname" . }}
             growpart:
               mode: auto

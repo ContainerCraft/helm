@@ -23,18 +23,21 @@ spec:
     spec:
       nodeSelector:
         node-role.kubernetes.io/kubevirt: ""
-      terminationGracePeriodSeconds: 0
       domain:
         cpu:
-          threads: {{ .Values.vyos.cpu.cores }}
-          model: {{ .Values.vyos.cpu.model }}
+          model: {{ .Values.nodes.vyos.cpu.model }}
+          threads: {{ .Values.nodes.vyos.cpu.cores }}
           dedicatedCpuPlacement: false
           sockets: 1
           cores: 1
-        machine:
-          type: "pc-q35-rhel8.3.0"
         resources:
-          {{- toYaml .Values.vyos.resources | nindent 10 }}
+          requests:
+            memory: {{ .Values.nodes.vyos.memory }}
+            devices.kubevirt.io/kvm: "1"
+          limits:
+            memory: {{ .Values.nodes.vyos.memory }}
+        machine:
+          type: "q35"
         devices:
           autoattachPodInterface: false
           autoattachSerialConsole: true
@@ -63,11 +66,21 @@ spec:
       - name: eth1
         multus:
           networkName: {{ include "kubespray.fullname" . }}.brvpc{{ .Values.network.host_interface }}.{{ .Values.network.vlan_id }}
+      terminationGracePeriodSeconds: 0
+      accessCredentials:
+      - sshPublicKey:
+          source:
+            secret:
+              secretName: {{ .Values.user.credentials.sshpubkeysecret }}
+          propagationMethod:
+            qemuGuestAgent:
+              users:
+              - "{{ .Values.user.name }}"
       volumes:
       - name: vyos-disk-vda-root
         containerDisk:
-          image: "{{ .Values.vyos.image.repository }}:{{ .Values.vyos.image.tag }}"
-          imagePullPolicy: {{ .Values.vyos.image.pullPolicy }}
+          image: "{{ .Values.nodes.vyos.source.image }}:{{ .Values.nodes.vyos.source.tag }}"
+          imagePullPolicy: {{ .Values.nodes.imagePullPolicy }}
       - name: cloudinitdisk
         cloudInitNoCloud:
           secretRef:

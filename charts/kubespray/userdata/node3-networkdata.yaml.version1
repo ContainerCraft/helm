@@ -1,0 +1,28 @@
+version: 1
+config:
+  - type: route
+    destination: 0.0.0.0/0
+    gateway: {{ .Values.network.vyos.eth1.ipv4 }}
+  - type: nameserver
+    interface: br0
+    address:
+      - {{ .Values.network.vyos.eth1.ipv4 }}
+    search:
+      - {{ .Values.network.search }}
+  - name: br0
+    type: bridge
+    bridge_interfaces:
+      - eth0
+    subnets:
+      - type: static
+        address: {{ .Values.network.node3.ipv4 }}
+        gateway: {{ .Values.network.vyos.eth1.ipv4 }}
+        dns_nameservers:
+          - {{ .Values.network.vyos.eth1.ipv4 }}
+        dns_search:
+          - {{ .Values.network.search }}
+    params:
+      bridge_ageing: 0
+      bridge_maxage: 0
+      bridge_stp: 'off'
+    mtu: 1500
