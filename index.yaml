@@ -383,6 +383,16 @@ entries:
     version: 0.0.1
   kubespray:
   - apiVersion: v2
+    appVersion: 2.17.1
+    created: "2021-12-20T00:31:10.543566632Z"
+    description: CCIO Kargo Kubespray Cluster
+    digest: 41f74c57ac2b084434f57c284fe1c966b6386be0e27cbe7b1616f3c243266c26
+    name: kubespray
+    type: application
+    urls:
+    - https://github.com/ContainerCraft/helm/releases/download/kubespray-0.0.9/kubespray-0.0.9.tgz
+    version: 0.0.9
+  - apiVersion: v2
     appVersion: 0.0.1
     created: "2021-11-14T05:30:12.718087668Z"
     description: CCIO Kargo Kubespray Cluster
@@ -432,4 +442,4 @@ entries:
     urls:
     - https://github.com/ContainerCraft/helm/releases/download/kubespray-0.0.1/kubespray-0.0.1.tgz
     version: 0.0.1
-generated: "2021-12-19T21:59:08.68871272Z"
+generated: "2021-12-20T00:31:10.543702131Z"
