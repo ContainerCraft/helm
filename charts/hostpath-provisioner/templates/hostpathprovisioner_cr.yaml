@@ -2,6 +2,8 @@ apiVersion: hostpathprovisioner.kubevirt.io/v1beta1
 kind: HostPathProvisioner
 metadata:
   name: hostpath-provisioner
+  labels:
+{{ include "hostpath-provisioner.labels" . | indent 4 }}
 spec:
   imagePullPolicy: IfNotPresent
   pathConfig:
