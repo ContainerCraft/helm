@@ -139,6 +139,16 @@ entries:
   hostpath-provisioner:
   - apiVersion: v2
     appVersion: v0.9.0
+    created: "2022-01-02T17:05:23.926916297Z"
+    description: Kubevirt Hostpath Provisioner Operatore Helm Chart
+    digest: dcc98b03df8496a6f81d5b12ed1ad8195cc82eaac5761462833e8b5abcbe6d57
+    name: hostpath-provisioner
+    type: application
+    urls:
+    - https://github.com/ContainerCraft/helm/releases/download/hostpath-provisioner-0.0.5/hostpath-provisioner-0.0.5.tgz
+    version: 0.0.5
+  - apiVersion: v2
+    appVersion: v0.9.0
     created: "2021-10-18T03:55:52.27192947Z"
     description: Kubevirt Hostpath Provisioner Operatore Helm Chart
     digest: 3bec36159f9356ebf4ae8402bdee2b0dbc5b585fdbc668db2f71e9226e20ac2b
@@ -452,4 +462,4 @@ entries:
     urls:
     - https://github.com/ContainerCraft/helm/releases/download/kubespray-0.0.1/kubespray-0.0.1.tgz
     version: 0.0.1
-generated: "2022-01-02T05:03:18.316423054Z"
+generated: "2022-01-02T17:05:23.927034297Z"
