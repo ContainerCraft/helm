@@ -401,6 +401,30 @@ entries:
     urls:
     - https://containercraft.io/helm/charts/konductor-0.0.1.tgz
     version: 0.0.1
+  kong:
+  - apiVersion: v2
+    appVersion: "2.8"
+    created: "2022-09-07T03:56:22.48492834Z"
+    dependencies:
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 11.1.15
+    description: The Cloud-Native Ingress and API-management
+    digest: 8c98b4c933826274d4bb663874ad37f4aaf17936cde066ddcb86d9c75a878d5e
+    home: https://konghq.com/
+    icon: https://s3.amazonaws.com/downloads.kong/universe/assets/icon-kong-inc-large.png
+    maintainers:
+    - email: harry@konghq.com
+      name: hbagdi
+    - email: traines@konghq.com
+      name: rainest
+    name: kong
+    sources:
+    - https://github.com/Kong/charts/tree/main/charts/kong
+    urls:
+    - https://github.com/ContainerCraft/helm/releases/download/kong-2.15.0/kong-2.15.0.tgz
+    version: 2.15.0
   kubespray:
   - apiVersion: v2
     appVersion: 2.17.1
@@ -462,4 +486,4 @@ entries:
     urls:
     - https://github.com/ContainerCraft/helm/releases/download/kubespray-0.0.1/kubespray-0.0.1.tgz
     version: 0.0.1
-generated: "2022-01-02T17:05:23.927034297Z"
+generated: "2022-09-07T03:56:22.485023842Z"
