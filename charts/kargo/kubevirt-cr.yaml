@@ -11,5 +11,4 @@ spec:
       featureGates: []
   customizeComponents: {}
   imagePullPolicy: IfNotPresent
-  infra:
   workloadUpdateStrategy: {}
